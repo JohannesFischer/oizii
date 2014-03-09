@@ -1,0 +1,29 @@
+en:
+  PostAdmin:
+    MENUTITLE: Share
+  ShareAdmin:
+    MENUTITLE: 'Share Admin'
+  Color:
+    PLURALNAME: Colors
+    SINGULARNAME: Color
+  Comment:
+    PLURALNAME: Comments
+    SINGULARNAME: Comment
+  Genre:
+    PLURALNAME: Genrs
+    SINGULARNAME: Genre
+  Like:
+    PLURALNAME: Liks
+    SINGULARNAME: Like
+  MyMember:
+    PLURALNAME: 'My Members'
+    SINGULARNAME: 'My Member'
+  Notification:
+    PLURALNAME: Notifications
+    SINGULARNAME: Notification
+  PageContent:
+    PLURALNAME: 'Page Contents'
+    SINGULARNAME: 'Page Content'
+  Post:
+    PLURALNAME: Posts
+    SINGULARNAME: Post

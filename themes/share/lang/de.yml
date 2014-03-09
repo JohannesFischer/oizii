@@ -1,0 +1,35 @@
+de:
+  Content:
+    And: und
+    By: von
+    LikeThis: 'gefällt das'
+    LikeThisSingular: 'gefällt das'
+    PostedOn: 'gepostet am'
+    You: Dir
+    nocomments: 'Dieser Post wurde noch nicht kommentiert'
+  Form:
+    CommentPlaceholder: 'schreibe einen Kommentar'
+    Description: Beschreibung
+    Genre: Genre
+    Link: 'YouTube, Soundcloud, Vimeo oder Dailymotion Link'
+    Submit: speichern
+    Title: Titel
+  Menu:
+    About: 'über share'
+    SignIn: 'log in'
+    SignOut: 'log out'
+  Text:
+    NoLikes: 'Klicke in Posts mit Youtube-Videos auf like um Lieder zu Deiner Playlist hinzuzufügen.'
+  Title:
+    Comments: Kommentare
+    MoreInGenre: 'Weitere Posts in'
+    MoreFromUser: 'Weitere Posts von'
+    Newpost: 'Neuer Post'
+    NoLikes: 'Deine Playlist ist noch leer'
+    genre: 'Alle Posts in'
+    likes: 'Deine Likes'
+    newpost: 'Neuer Post'
+    playlist: 'deine playlist'
+    results: '{resultcount} Treffer für {searchterm}'
+    usershares: 'Alle shares von {username}'
+    yourlikes: 'Deine Likes'

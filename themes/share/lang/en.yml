@@ -1,0 +1,35 @@
+en:
+  Content:
+    And: and
+    By: by
+    LikeThis: 'like this'
+    LikeThisSingular: 'likes this'
+    PostedOn: 'posted on'
+    You: You
+    nocomments: 'Nobody commented on this post yet'
+  Form:
+    CommentPlaceholder: 'write a comment'
+    Description: Description
+    Genre: Genre
+    Link: 'YouTube, Soundcloud, Vimeo or Dailymotion Link'
+    Submit: save
+    Title: Title
+  Menu:
+    About: 'about share'
+    SignIn: 'sign in'
+    SignOut: 'sign out'
+  Text:
+    NoLikes: 'Click on like in posts with a Youtube video to add songs to your playlist.'
+  Title:
+    Comments: Comments
+    MoreInGenre: 'More posts in'
+    MoreFromUser: 'More posts of'
+    Newpost: 'Add Post'
+    NoLikes: 'Your playlist is still empty'
+    genre: 'All posts in {genre}'
+    likes: 'your likes'
+    newpost: 'add a post'
+    playlist: 'your playlist'
+    results: '{resultcount} results for {searchterm}'
+    usershares: 'All shares from  {username}'
+    yourlikes: 'Your Likes'

@@ -1,0 +1,1 @@
+<div class="columns large-6 large-offset-3 medium-10 medium-offset-1 text-center loading" ng-show="loading || infiniteBusy">loading ...</div>
