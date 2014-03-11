@@ -231,11 +231,12 @@ class Data_Controller extends Controller {
 		$sqlQuery->addLeftJoin('MyMember', 'MemberID = MyMember.ID');
 		$sqlQuery->addLeftJoin('Color', 'MyMember.ColorID = Color.ID');
 		
-		// liked only
+		// likes only
 		if ($likes) {
-			$sqlQuery->addLeftJoin('Like', 'Post.MemberID = Like.MemberID');
-			$sqlQuery->addGroupBy('Post.ID');
+			$sqlQuery->addInnerJoin('Like', 'Like.PostId = Post.ID');
+			$sqlQuery->addWhere('Like.MemberID = ' . Member::currentUserID());
 		}
+		
 		// exclude
 		if ($exclude_id) {
 			$sqlQuery->addWhere('Post.ID != ' . $exclude_id);
@@ -245,7 +246,7 @@ class Data_Controller extends Controller {
 			$sqlQuery->addWhere('Post.GenreID = ' . $genre_id);
 		}
 		// filter | MemberID
-		if ($member_id && ! $likes) {
+		if ($member_id) {
 			$sqlQuery->addWhere('Post.MemberID = ' . $member_id);
 		}
 		// sorting
@@ -259,7 +260,7 @@ class Data_Controller extends Controller {
 		} else if ($limit && $start) {
 			$sqlQuery->setLimit($limit, $start);
 		}
-		
+		// Debug::dump($sqlQuery->sql());exit;
 		// Execute and return a Query object
 		$result = $sqlQuery->execute();
 		
