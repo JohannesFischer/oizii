@@ -1,6 +1,6 @@
 <% include Loading %>
 
-<section class="post" ng-swipe-left="nextPost()" ng-hide="loading">
+<section class="row post" ng-swipe-left="nextPost()" ng-hide="loading">
 	
 	<section class="columns large-9 medium-9">
 		
@@ -12,6 +12,10 @@
 		</p>
 		
 		<section class="post-content" ng-bind-html="post.Content"></section>
+		
+		<section class="hash-tags">
+			<a href="/#/tag/{{ tag }}" ng-repeat="tag in post.HashTags">#{{ tag }}</a>
+		</section>
 
 		<div class="flex-video player widescreen" ng-class="{vimeo: post.VimeoID != null}">
 			<iframe width="560" height="315" src="{{ frameURL }}" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>

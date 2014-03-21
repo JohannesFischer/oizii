@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title><% if getTitle %>$getTitle :: <% end_if %>oizii</title>
 	<meta name="viewport" content="width=device-width">
-	<meta name="robots" content="noindex, nofollow">
+	<meta name="robots" content="index, follow">
 	<link rel="icon" type="image/png" href="/themes/share/images/share-logo.png">
 	<link rel="apple-touch-icon" href="/themes/share/images/share-logo-129.png">
 </head>
@@ -52,14 +52,14 @@
 							<a href="/#/add"><%t Title.newpost "add a post" %></a>
 						</li>
 						<li>
-							<a href="/#/likes/$CurrentMember.ID"><%t Title.likes "your likes" %></a>
+							<a href="/#/likes/"><%t Title.likes "your likes" %></a>
 						</li>
 						<li>
 							<a href="/user/playlist"><%t Title.playlist "your playlist" %></a>
 						</li>
 					<% end_if %>
 					<li>
-						<a href="/page/get/about"><%t Menu.About "about share" %></a>
+						<a href="/#/about"><%t Menu.About "about share" %></a>
 					</li>
 					<li>
 						<% if CurrentMember %>

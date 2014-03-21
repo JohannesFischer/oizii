@@ -358,6 +358,18 @@ article:hover p.genre {
 .post em {
   color: #fff;
 }
+.post .post-content {
+  margin-bottom: 10px;
+}
+.post .post-content p:last-of-type {
+  margin-bottom: 0;
+}
+.post .hash-tags {
+  margin-bottom: 20px;
+}
+.post .hash-tags a {
+  padding: 0 10px 0 0;
+}
 .post .player {
   background: #7ecbdd url(../images/loader.gif) no-repeat 50% 50%;
 }
@@ -382,6 +394,55 @@ article:hover p.genre {
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 2.3125rem;
+}
+.chart .chart-holder .slice {
+  border-radius: 50%;
+  clip: rect(0px,300px,300px,150px);
+  height: 50px;
+  width: 50px;
+}
+.chart li {
+  list-style: none;
+}
+.chart li .legend {
+  display: block;
+  float: left;
+  height: 20px;
+  margin: 0 5px 0 0;
+  width: 20px;
+}
+.chart .color1 {
+  background-color: #183869;
+}
+.chart .color2 {
+  background-color: #1c437e;
+}
+.chart .color3 {
+  background-color: #214e92;
+}
+.chart .color4 {
+  background-color: #265aa7;
+}
+.chart .color5 {
+  background-color: #2b65bc;
+}
+.chart .color6 {
+  background-color: #3070d0;
+}
+.chart .color7 {
+  background-color: #457ed5;
+}
+.chart .color8 {
+  background-color: #598dda;
+}
+.chart .color9 {
+  background-color: #83a9e3;
+}
+.chart .color10 {
+  background-color: #98b8e8;
+}
+.chart .color11 {
+  background-color: #adc6ec;
 }
 .member-list .row {
   margin: 0 0 10px;

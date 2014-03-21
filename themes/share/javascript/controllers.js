@@ -43,8 +43,19 @@ shareApp.factory('postFactory', ['$http', '$location', function ($http, $locatio
 
 /* Controllers */
 
+// About
+shareApp.controller('About', function ($scope, $http, pageFactory) {
+	$scope.genres = [];
+	pageFactory.setTitle('About');
+	
+	$http.get('data/getGenreStats').success(function (data) {
+		console.log(data[0].Genres);
+		$scope.genres = data[0].Genres;
+	});
+});
+
 // Login
-shareApp.controller('Login', function ($scope, $http) {
+shareApp.controller('Login', function ($scope, $http, pageFactory) {
 	$scope.error = false;
 	
 	$http.get('data/isLoggedIn').success(function (data) {
@@ -52,6 +63,8 @@ shareApp.controller('Login', function ($scope, $http) {
 			window.location.href = '/';
 		}
 	});
+	
+	pageFactory.setTitle('Login');
 	
 	$scope.login = function() {
 		$scope.error = false;
@@ -72,7 +85,6 @@ shareApp.controller('Login', function ($scope, $http) {
 			data: postData,
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(data) {
-			console.log(data);
 			if (data.User === undefined) {
 				$scope.error = true;
 			} else {
@@ -86,7 +98,8 @@ shareApp.controller('Login', function ($scope, $http) {
 shareApp.controller('PostList', ['$scope', 'postFactory', 'postsPerPage', 'pageFactory',
 	function ($scope, postFactory, postsPerPage, pageFactory) {
 		var start = 0;
-		$scope.loading = true;
+		// toggle Intro text
+		$scope.showIntro = true;
 		$scope.posts = [];
 		$scope.infiniteBusy = false;
 		pageFactory.resetTitle();
@@ -95,12 +108,13 @@ shareApp.controller('PostList', ['$scope', 'postFactory', 'postsPerPage', 'pageF
 			$scope.infiniteBusy = true;
 			
 			postFactory.getPosts('limit=' + postsPerPage + '&start=' + start).success(function (data) {
-				for (var i = 0; i < data.length; i++) {
-					$scope.posts.push(data[i]);
+				if (data.length > 0) {
+					for (var i = 0; i < data.length; i++) {
+						$scope.posts.push(data[i]);
+					}
+					$scope.infiniteBusy = false;
+					start += data.length;
 				}
-				$scope.loading = false;
-				$scope.infiniteBusy = false;
-				start += data.length;
 			}).error(function () {
 				// handle error
 			});
@@ -135,6 +149,32 @@ shareApp.controller('PostListGenre', ['$scope', '$routeParams', 'postFactory', '
 	}
 ]);
 
+// PostList by Tag
+shareApp.controller('PostListTag', ['$scope', '$routeParams', 'postFactory', 'postsPerPage', 'pageFactory',
+	function ($scope, $routeParams, postFactory, postsPerPage, pageFactory) {
+		var start = 0;
+		$scope.loading = true;
+		$scope.posts = [];
+		$scope.infiniteBusy = false;
+		pageFactory.setTitle('tag / ' + $routeParams.tag);
+		
+		$scope.loadMore = function() {
+			$scope.infiniteBusy = true;
+			
+			postFactory.getPosts('limit=' + postsPerPage + '&tag=' + $routeParams.tag + '&start=' + start).success(function (data) {
+				for (var i = 0; i < data.length; i++) {
+					$scope.posts.push(data[i]);
+				}
+				$scope.loading = false;
+				$scope.infiniteBusy = false;
+				start += data.length;
+			}).error(function () {
+				// handle error
+			});
+		};
+	}
+]);
+
 // PostList by User
 shareApp.controller('PostListUser', function ($scope, $routeParams, postFactory, pageFactory) {
 	$scope.loading = true;
@@ -149,17 +189,30 @@ shareApp.controller('PostListUser', function ($scope, $routeParams, postFactory,
 });
 
 // PostList User Likes
-shareApp.controller('PostListLikes', function ($scope, $routeParams, postFactory, pageFactory) {
-	$scope.loading = true;
-	$scope.posts = [];
-	pageFactory.resetTitle();
-	
-	postFactory.getPosts('likes=1&userId=' + $routeParams.userId).success(function (data) {
-		$scope.loading = false;
-		$scope.posts = data;
-		pageFactory.setTitle('Likes from ' + data[0].User.Name);
-	});
-});
+shareApp.controller('PostListLikes', ['$scope', 'postFactory', 'postsPerPage', 'pageFactory',
+	function ($scope, postFactory, postsPerPage, pageFactory) {
+		var start = 0;
+		$scope.infiniteBusy = false;
+		$scope.posts = [];
+		pageFactory.resetTitle();
+		
+		$scope.loadMore = function() {
+			$scope.infiniteBusy = true;
+			
+			postFactory.getPosts('likes=1&limit=' + postsPerPage + '&start=' + start).success(function (data) {
+				for (var i = 0; i < data.length; i++) {
+					$scope.posts.push(data[i]);
+				}
+				$scope.loading = false;
+				$scope.infiniteBusy = false;
+				start += data.length;
+				pageFactory.setTitle('Your Likes');
+			}).error(function () {
+				// handle error
+			});
+		};
+	}
+]);
 
 // Post Add
 shareApp.controller('NewPost', function ($scope, postFactory) {
@@ -181,7 +234,7 @@ shareApp.controller('PostEdit', function ($scope, $http, $location, $routeParams
 	$scope.master = {};
 	$scope.post = {};
 
-	$http.get('data/getPost/' + $routeParams.postId).success(function(data) {
+	$http.get('data/getPost/' + $routeParams.postId + '?edit=1').success(function(data) {
 		$scope.loading = false;
 		
 		if (data.CanEdit !== true) {
@@ -192,12 +245,18 @@ shareApp.controller('PostEdit', function ($scope, $http, $location, $routeParams
 		$scope.master = angular.copy($scope.post);
 	});
 	
-	
+	// checking for changes on scope
 	$scope.isUnchanged = function (post) {
 		return angular.equals(post, $scope.master);
 	};
 	
-	$scope.submitPost = function(post) {		
+	// cancel editing and return to post
+	$scope.cancelEdit = function (post) {
+		$location.path('/post/' + post.ID);
+	};
+	
+	// submit changed post
+	$scope.submitPost = function(post) {	
 		postFactory.submitPost(post);
 	};
 });

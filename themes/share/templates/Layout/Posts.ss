@@ -1,4 +1,12 @@
-<section id="Posts" class="post-list" infinite-scroll="loadMore()" infinite-scroll-disabled="infiniteBusy">
+<div class="row" ng-show="showIntro">
+	<div class="columns large-12">
+		<div class="panel callout radius">
+			<h2>oizii - share delicous music</h2>
+		</div>
+	</div>
+</div>
+
+<section id="Posts" class="row post-list" infinite-scroll="loadMore()" infinite-scroll-disabled="infiniteBusy">
 	
 	<article class="columns large-4 medium-6 tile" ng-repeat="post in posts">
 		<div class="content" style="background-color:#{{ post.User.HEX }}">

@@ -15,11 +15,14 @@
 :: Content
 :: Playlist
 :: Sidebar
+:: Comments
+:: Charts
 :: Mobile Styles
 */
 
 /* Colors */
 @body-color: #524C49;
+@chart-base: #132D54;
 @header-color: #56bbd2;
 @header-dark: darken(@header-color, 10%);
 @header-light: lighten(@header-color, 10%);
@@ -471,6 +474,22 @@ article {
 		color: @font-color;
 	}
 	
+	.post-content {
+		margin-bottom: @spacing-default;
+		
+		p:last-of-type {
+			margin-bottom: 0;
+		}
+	}
+	
+	.hash-tags {
+		margin-bottom: @spacing-larger;
+		
+		a {
+			padding: 0 @spacing-default 0 0;
+		}
+	}
+	
 	.player {
 		background: @header-light url(../images/loader.gif) no-repeat 50% 50%;
 	}
@@ -505,6 +524,74 @@ article {
 		background-size: cover;
 		min-height: 2.3125rem;
 	}
+}
+
+/* -----------------------------------------
+   Charts
+----------------------------------------- */
+
+.chart {
+	
+	.chart-holder {
+		
+		.slice {
+			border-radius: 50%;
+			clip: rect(0px, 300px, 300px, 150px);
+			height: 50px;
+			width: 50px;
+		}
+		
+	}
+	
+	/* legend */
+	
+	li {
+		list-style: none;
+	
+		.legend {
+			display: block;
+			float: left;
+			height: 20px;
+			margin: 0 5px 0 0;
+			width: 20px;
+		}
+	}
+	
+	/* colors */
+	.color1 {
+		background-color: lighten(@chart-base, 5%);
+	}
+	.color2 {
+		background-color: lighten(@chart-base, 10%);
+	}
+	.color3 {
+		background-color: lighten(@chart-base, 15%);
+	}
+	.color4 {
+		background-color: lighten(@chart-base, 20%);
+	}
+	.color5 {
+		background-color: lighten(@chart-base, 25%);
+	}
+	.color6 {
+		background-color: lighten(@chart-base, 30%);
+	}
+	.color7 {
+		background-color: lighten(@chart-base, 35%);
+	}
+	.color8 {
+		background-color: lighten(@chart-base, 40%);
+	}
+	.color9 {
+		background-color: lighten(@chart-base, 50%);
+	}
+	.color10 {
+		background-color: lighten(@chart-base, 55%);
+	}
+	.color11 {
+		background-color: lighten(@chart-base, 60%);
+	}
+	
 }
 
 /* -----------------------------------------

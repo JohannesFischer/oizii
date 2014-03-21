@@ -20,7 +20,7 @@ class Content_Controller extends Share_Controller {
 			return $this->renderWith(array('PageContent', 'Page'), array(
 				'Post' => false,
 				'Text' => $text->Content,
-				'Title' => $text->Title
+				'PageTitle' => $text->Title
 			));
 		} else {
 			$this->redirect('/');

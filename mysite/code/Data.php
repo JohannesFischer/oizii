@@ -4,6 +4,7 @@ class Data_Controller extends Controller {
 
 	private  static $allowed_actions = array (
 		'comment',
+		'getGenreStats',
 		'getLikes',
 		'getPost',
 		'getPosts',
@@ -93,6 +94,50 @@ class Data_Controller extends Controller {
 		return $this->_jsonOut($ar->toArray());
 	}
 	
+	public function getGenreStats() {
+		$sqlQuery = new SQLQuery();
+		$sqlQuery->setFrom('Post');
+		$sqlQuery->selectField('COUNT(Post.ID)', 'PostCount');
+		$sqlQuery->selectField('Genre.Title', 'Title');
+		$sqlQuery->addLeftJoin('Genre', 'Genre.ID = Post.GenreID');
+		$sqlQuery->addGroupBy('Genre.ID');
+		$sqlQuery->setOrderBy('PostCount DESC');
+		$sqlQuery->setLimit(10);
+		
+		// Execute and return a Query object
+		$result = $sqlQuery->execute();
+		//Debug::dump($sqlQuery->sql());
+		$arrayList = new ArrayList();
+		
+		// get post count
+		$post_count = Post::get()->count();
+		
+		$a = array(
+			'Genres' => array(),
+			'Postcount' => $post_count
+		);
+		
+		$others = $post_count;
+		
+		foreach($result as $rowArray) {
+			array_push($a['Genres'], array(
+				'Count' => $rowArray['PostCount'],
+				'Percentage' => round(($rowArray['PostCount'] / $post_count) * 100, 2),
+				'Title' => $rowArray['Title']
+			));
+			$others -= $rowArray['PostCount'];
+		}
+		$a['Genres'][] = array(
+			'Count' => $others,
+			'Percentage' => round(($others / $post_count) * 100, 2),
+			'Title' => 'Others'
+		);
+		
+		$arrayList->push($a);
+		
+		return $this->_jsonOut($arrayList->toArray());
+	}
+	
 	public function getLikes() {
 		$params = $this->getURLParams();
 		$id = (int)$params['ID'];
@@ -115,8 +160,11 @@ class Data_Controller extends Controller {
 	}
 	
 	public function getPost() {
+		$get_data = $this->request->getVars();
 		$params = $this->getURLParams();
+		
 		$id = (int)$params['ID'];
+		$edit = isset($get_data['edit']) ? (bool)$get_data['edit'] == 1 : false;
 		
 		// fields to catch
 		$fields = array(
@@ -161,6 +209,7 @@ class Data_Controller extends Controller {
 				'ID' => $rowArray['GenreID'],
 				'Title' => $rowArray['GenreTitle']
 			),
+			'HashTags' => array(),
 			'ID' => $rowArray['ID'],
 			'Link' => $rowArray['Link'],
 			'Title' => $rowArray['Title'],
@@ -172,9 +221,29 @@ class Data_Controller extends Controller {
 			'YouTubeID' => $rowArray['YouTubeID']
 		);
 		
+		// if edit
+		if ($edit) {
+			$post = Post::get()->byID($id);
+			$hash_tags = $post->HashTags();
+			
+			$content = $ar['Content'] . "\n";
+			foreach($hash_tags as $tag) {
+				$content.= '#' . $tag->Title . ' ';
+			}
+			$ar['Content'] = strip_tags($content);
+		}
+		
 		// has liked
 		$like = Like::get()->filter('PostID', $ar['ID']);
 		$ar['HasLiked'] = $like->count() == 1;
+		
+		// add HashTags
+		$post = Post::get()->byId($id);
+		$hash_tags = $post->HashTags();
+		
+		foreach($hash_tags as $tag) {
+			$ar['HashTags'][] = $tag->Title;
+		}
 		
 		// add Comments
 		$comments = Comment::get()->filter('PostID', $ar['ID'])->sort('Created', 'ASC');
@@ -380,7 +449,7 @@ class Data_Controller extends Controller {
 			$post = new Post();	
 		}
 		$post->Title = $title;
-		$post->Content = $text;
+		$post->Content = trim($text);
 		$post->GenreID = $genre_id;
 		$post->Link = $link;
 		$post->MemberID = Member::currentUserID();

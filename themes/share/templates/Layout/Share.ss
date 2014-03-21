@@ -24,7 +24,7 @@
 	</section>
 <% end_if %>
 
-<section class="row" ng-view></section>
+<section ng-view></section>
 <%--
 <% if Posts.MoreThanOnePage %>
 	<section class="pagination-buttons row">	

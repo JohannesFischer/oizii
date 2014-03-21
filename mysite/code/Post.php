@@ -24,6 +24,10 @@ class Post extends DataObject {
 		'Likes' => 'Like'
 	);
 	
+	private static $many_many = array(
+		'HashTags' => 'HashTag'
+	);
+	
 	private static $summary_fields = array(
         'Title' => 'Title',
 		'Genre.Title' => 'Genre',
@@ -54,7 +58,7 @@ class Post extends DataObject {
     }
 	
 	public function getCMSFields() {
-		$dropdown_values = Genre::get()->map('ID', 'Title');
+		$dropdown_values = Genre::get()->map('ID', 'Title');    
 		
 		return new FieldList(
 			new TextField('Title'),
@@ -134,12 +138,16 @@ class Post extends DataObject {
 		))->First();
 	}
 	
-	// useless helper...Post.YouTubeID is true in the template even if NULL
-	public function hasYouTubeID() {
-		return $this->YouTubeID;
+	public function onAfterWrite() {
+		parent::onAfterWrite();
+		
+		
 	}
 	
-	public function onBeforeWrite() {	
+	public function onBeforeWrite() {
+		parent::onBeforeWrite();
+		
+		// set MemberID
 		if ( ! $this->MemberID) {
 			$this->MemberID = Member::currentUserID();
 		}
@@ -156,15 +164,48 @@ class Post extends DataObject {
 			$this->DailyMotionID = $this->getDailyMotionID();
 		}
 		
-		parent::onBeforeWrite();
-	}
-	
-	/*
-	public function validate() {
-        $result = parent::validate();
+		// get tags from Content
+		preg_match_all('/#(\w+)/', $this->Content, $matches);
 		
-        return $result;
-    }
-	*/
+		// current HashTags from DB if available
+		$hash_tags = $this->HashTags()->map('Title')->toArray();
+		$current_tags = is_array($hash_tags) ? array_values($hash_tags) : array();
+		
+		$submitted_tags = isset($matches[1]) ? $matches[1] : array();
+		
+		if (count($submitted_tags) > 0) {
+			// remove hash tags not in submitted Content
+			foreach($current_tags as $tag) {
+				if ( ! in_array($tag, $submitted_tags)) {
+					$hash_tag = HashTag::get()->filter('Title', $tag)->first();
+					$this->HashTags()->remove($hash_tag);
+				}
+			}
+			
+			// save new tags
+			foreach($submitted_tags as $tag) {				
+				if ( ! in_array($tag, $current_tags)) {
+					$hashtag = HashTag::get()->filter('Title', $tag)->First();
+					
+					if ( ! $hashtag) {
+						$hashtag = new HashTag();
+						$hashtag->Title = $tag;
+						$hashtag->write();
+					}
+					
+					$this->HashTags()->add($hashtag);
+				}
+			}
+		} else {
+			// remove all hash tags
+			foreach($hash_tags as $tag) {
+				$this->HashTags()->remove($tag);
+			}
+		}
+		
+		// remove hashtags in Content
+		$content = preg_replace('/(\s)?#\w+/i', '', $this->Content);
+		$this->Content = trim($content);
+	}
 
 }

@@ -7,6 +7,7 @@ class Share_Controller extends Controller {
 	private $post;
 
 	private  static $allowed_actions = array (
+		'about',
 		'bygenre',
 		'comment',
 		'getpost',
@@ -26,8 +27,6 @@ class Share_Controller extends Controller {
 	
 	public function init() {
 		parent::init();
-		
-		$this->per_page = 3;
 		
 		$theme_folder = 'themes/' . SSViewer::current_theme();
 		$css_folder = $theme_folder . '/css/';
@@ -82,6 +81,20 @@ class Share_Controller extends Controller {
 		return $this->renderWith(array('Share', 'Page'), array(
 			'Posts' => $list
 		));
+	}
+	
+	public function about() {
+		$data = array();
+		$page = PageContent::get()->First();
+		
+		if ($page) {
+			$data = array(
+				'Text' => $page->Content,
+				'Title' => $page->Title
+			);
+		}
+		
+		return $this->renderWith(array('About'), $data);
 	}
 	
 	public function bygenre() {
@@ -158,6 +171,10 @@ class Share_Controller extends Controller {
 	
 	public function getGravatarImageForCurrentMember($size = 40) {
 		return 'http://www.gravatar.com/avatar/' . md5(strtolower(trim(Member::CurrentUser()->Email))) . '?s=' . $size;
+	}
+	
+	public function getMember() {
+		return MyMember::get()->filter('HideInList', 0)->sort('Created DESC');
 	}
 	
 	public function getPost() {

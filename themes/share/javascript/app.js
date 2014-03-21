@@ -12,6 +12,10 @@ shareApp.value('soundcloudClientId', 'a12345654321x');
 shareApp.config(['$routeProvider',
 	function($routeProvider) {
 		$routeProvider.
+		when('/about', {
+	        templateUrl: 'share/about/',
+	        controller: 'About'
+	    }).
 		when('/add', {
 	        templateUrl: 'share/newPost/',
 	        controller: 'NewPost'
@@ -24,7 +28,7 @@ shareApp.config(['$routeProvider',
 	        templateUrl: 'share/posts/',
 			controller: 'PostListGenre'
 		}).
-		when('/likes/:userId', {
+		when('/likes/', {
 	        templateUrl: 'share/posts/',
 			controller: 'PostListLikes'
 		}).
@@ -43,6 +47,10 @@ shareApp.config(['$routeProvider',
 		when('/share', {
 	        templateUrl: 'share/newpost/',
 	        controller: 'NewPost'
+	    }).
+		when('/tag/:tag', {
+	        templateUrl: 'share/posts/',
+	        controller: 'PostListTag'
 	    }).
 		when('/user/:userId', {
 	        templateUrl: 'share/posts/',

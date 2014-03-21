@@ -24,5 +24,7 @@
 		
 		<button class="button" ng-click="submitPost(post)" ng-disabled="NewPost.\$invalid || isUnchanged(post)"><%t Form.Submit "save" %></button>
 		
+		<button class="button" ng-click="cancelEdit(post)"><%t Form.Cancel "cancel" %></button>
+		
 	</form>
 </section>
