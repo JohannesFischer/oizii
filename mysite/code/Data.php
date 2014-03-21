@@ -285,6 +285,7 @@ class Data_Controller extends Controller {
 		$member_id = isset($get_data['userId']) ? (int)$get_data['userId'] : false;
 		$random = isset($get_data['random']) ? (bool)$get_data['random'] : false;
 		$start = isset($get_data['start']) ? (int)$get_data['start'] : 0;
+		$tag = isset($get_data['tag']) ? Convert::raw2sql($get_data['tag']) : false;
 		
 		$sqlQuery = new SQLQuery();
 		$sqlQuery->setFrom('Post');
@@ -305,10 +306,22 @@ class Data_Controller extends Controller {
 			$sqlQuery->addInnerJoin('Like', 'Like.PostId = Post.ID');
 			$sqlQuery->addWhere('Like.MemberID = ' . Member::currentUserID());
 		}
+		// likes only
+		if ($likes) {
+			$sqlQuery->addInnerJoin('Like', 'Like.PostId = Post.ID');
+			$sqlQuery->addWhere('Like.MemberID = ' . Member::currentUserID());
+		}
 		
 		// exclude
 		if ($exclude_id) {
 			$sqlQuery->addWhere('Post.ID != ' . $exclude_id);
+		}
+		
+		// filter | Tag
+		if ($tag) {
+			$sqlQuery->addInnerJoin('Post_HashTags', 'Post_HashTags.PostID = Post.ID');
+			$sqlQuery->addLeftJoin('HashTag', 'Post_HashTags.HashTagID = HashTag.ID');
+			$sqlQuery->addWhere("HashTag.Title = '$tag'");
 		}
 		// filter | GenreID
 		if ($genre_id) {

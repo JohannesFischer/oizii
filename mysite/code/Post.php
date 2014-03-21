@@ -183,7 +183,8 @@ class Post extends DataObject {
 			}
 			
 			// save new tags
-			foreach($submitted_tags as $tag) {				
+			foreach($submitted_tags as $tag) {
+				if ( ! preg_match('/[a-zA-z0-9]+/', $tag)) continue;
 				if ( ! in_array($tag, $current_tags)) {
 					$hashtag = HashTag::get()->filter('Title', $tag)->First();
 					
