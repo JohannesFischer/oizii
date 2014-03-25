@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/installers.git",
-                "reference": "848de789c66ac609e7b2862c3500dd708afb72ce"
+                "reference": "c74a930ef0cb2e36c9f0c119eb920b82513c2e46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/installers/zipball/848de789c66ac609e7b2862c3500dd708afb72ce",
-                "reference": "848de789c66ac609e7b2862c3500dd708afb72ce",
+                "url": "https://api.github.com/repos/composer/installers/zipball/c74a930ef0cb2e36c9f0c119eb920b82513c2e46",
+                "reference": "c74a930ef0cb2e36c9f0c119eb920b82513c2e46",
                 "shasum": ""
             },
             "replace": {
@@ -87,7 +87,7 @@
                 "zend",
                 "zikula"
             ],
-            "time": "2014-03-04 04:29:18"
+            "time": "2014-03-21 15:33:48"
         },
         {
             "name": "silverstripe/framework",

@@ -1,17 +1,65 @@
 [
     {
+        "name": "silverstripe/framework",
+        "version": "3.1.3",
+        "version_normalized": "3.1.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/silverstripe/silverstripe-framework.git",
+            "reference": "ead3e263786e85ef00ffa76d8d740a62526c5414"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/silverstripe/silverstripe-framework/zipball/ead3e263786e85ef00ffa76d8d740a62526c5414",
+            "reference": "ead3e263786e85ef00ffa76d8d740a62526c5414",
+            "shasum": ""
+        },
+        "require": {
+            "composer/installers": "*",
+            "php": ">=5.3.2"
+        },
+        "time": "2014-03-02 19:54:18",
+        "type": "silverstripe-module",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "tests/behat/features/bootstrap"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "SilverStripe",
+                "homepage": "http://silverstripe.com"
+            },
+            {
+                "name": "The SilverStripe Community",
+                "homepage": "http://silverstripe.org"
+            }
+        ],
+        "description": "The SilverStripe framework",
+        "homepage": "http://silverstripe.org",
+        "keywords": [
+            "framework",
+            "silverstripe"
+        ]
+    },
+    {
         "name": "composer/installers",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "848de789c66ac609e7b2862c3500dd708afb72ce"
+            "reference": "c74a930ef0cb2e36c9f0c119eb920b82513c2e46"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/848de789c66ac609e7b2862c3500dd708afb72ce",
-            "reference": "848de789c66ac609e7b2862c3500dd708afb72ce",
+            "url": "https://api.github.com/repos/composer/installers/zipball/c74a930ef0cb2e36c9f0c119eb920b82513c2e46",
+            "reference": "c74a930ef0cb2e36c9f0c119eb920b82513c2e46",
             "shasum": ""
         },
         "replace": {
@@ -21,7 +69,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "3.7.*"
         },
-        "time": "2014-03-04 04:29:18",
+        "time": "2014-03-21 15:33:48",
         "type": "composer-installer",
         "extra": {
             "class": "Composer\\Installers\\Installer",
@@ -83,54 +131,6 @@
             "wordpress",
             "zend",
             "zikula"
-        ]
-    },
-    {
-        "name": "silverstripe/framework",
-        "version": "3.1.3",
-        "version_normalized": "3.1.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/silverstripe/silverstripe-framework.git",
-            "reference": "ead3e263786e85ef00ffa76d8d740a62526c5414"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/silverstripe/silverstripe-framework/zipball/ead3e263786e85ef00ffa76d8d740a62526c5414",
-            "reference": "ead3e263786e85ef00ffa76d8d740a62526c5414",
-            "shasum": ""
-        },
-        "require": {
-            "composer/installers": "*",
-            "php": ">=5.3.2"
-        },
-        "time": "2014-03-02 19:54:18",
-        "type": "silverstripe-module",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "tests/behat/features/bootstrap"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "SilverStripe",
-                "homepage": "http://silverstripe.com"
-            },
-            {
-                "name": "The SilverStripe Community",
-                "homepage": "http://silverstripe.org"
-            }
-        ],
-        "description": "The SilverStripe framework",
-        "homepage": "http://silverstripe.org",
-        "keywords": [
-            "framework",
-            "silverstripe"
         ]
     }
 ]
