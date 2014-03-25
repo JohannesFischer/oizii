@@ -2,11 +2,14 @@
 
 /* Factories */
 
-shareApp.factory('pageFactory', function() {
+shareApp.factory('pageFactory', function($http) {
 	var defaultTitle = 'oizii';
 	return {
 		resetTitle: function () {
 			document.title = defaultTitle;
+		},
+		setLastVisited: function (postId) {
+			return $http.get('data/lastVisited?postId=' + postId);
 		},
 		setTitle: function(newTitle) {
 			document.title = defaultTitle + ' :: ' + newTitle;
@@ -88,7 +91,11 @@ shareApp.controller('Login', function ($scope, $http, pageFactory) {
 			if (data.User === undefined) {
 				$scope.error = true;
 			} else {
-				window.location.href = '/';
+				var url = '/';
+				if (data.LastVisited) {
+					url = '/#/post/' + data.LastVisited;
+				}
+				window.location.href = url;
 			}
 		});
 	};
@@ -114,6 +121,8 @@ shareApp.controller('PostList', ['$scope', 'postFactory', 'postsPerPage', 'pageF
 					}
 					$scope.infiniteBusy = false;
 					start += data.length;
+				} else {
+					$scope.hideLoader = true;
 				}
 			}).error(function () {
 				// handle error
@@ -135,13 +144,18 @@ shareApp.controller('PostListGenre', ['$scope', '$routeParams', 'postFactory', '
 			$scope.infiniteBusy = true;
 			
 			postFactory.getPosts('limit=' + postsPerPage + '&genreId=' + $routeParams.genreId + '&start=' + start).success(function (data) {
-				for (var i = 0; i < data.length; i++) {
-					$scope.posts.push(data[i]);
+				if (data.length > 0) {
+					if ($scope.posts.length == 0) {
+						pageFactory.setTitle(data[0].Genre.Title);	
+					}					
+					for (var i = 0; i < data.length; i++) {
+						$scope.posts.push(data[i]);
+					}
+					$scope.infiniteBusy = false;
+					start += data.length;
+				} else {
+					$scope.hideLoader = true;
 				}
-				$scope.loading = false;
-				$scope.infiniteBusy = false;
-				start += data.length;
-				pageFactory.setTitle(data[0].Genre.Title);
 			}).error(function () {
 				// handle error
 			});
@@ -176,17 +190,34 @@ shareApp.controller('PostListTag', ['$scope', '$routeParams', 'postFactory', 'po
 ]);
 
 // PostList by User
-shareApp.controller('PostListUser', function ($scope, $routeParams, postFactory, pageFactory) {
-	$scope.loading = true;
-	$scope.posts = [];
-	pageFactory.resetTitle();
-	
-	postFactory.getPosts('userId=' + $routeParams.userId).success(function (data) {
-		pageFactory.setTitle(data[0].User.Name);
-		$scope.posts = data;
-		$scope.loading = false;
-	});
-});
+shareApp.controller('PostListUser', ['$scope', '$routeParams', 'postFactory', 'postsPerPage', 'pageFactory',
+	function ($scope, $routeParams, postFactory, postsPerPage, pageFactory) {
+		var start = 0;
+		$scope.loading = true;
+		$scope.posts = [];
+		pageFactory.resetTitle();
+		$scope.infiniteBusy = false;
+		
+		$scope.loadMore = function() {
+			$scope.infiniteBusy = true;
+		
+			postFactory.getPosts('userId=' + $routeParams.userId + '&limit=' + postsPerPage + '&start=' + start).success(function (data) {
+				if (data.length > 0) {
+					if ($scope.posts.length == 0) {
+						pageFactory.setTitle(data[0].User.Name);
+					}					
+					for (var i = 0; i < data.length; i++) {
+						$scope.posts.push(data[i]);
+					}
+					$scope.infiniteBusy = false;
+					start += data.length;
+				} else {
+					$scope.hideLoader = true;
+				}
+			});
+		}
+	}
+]);
 
 // PostList User Likes
 shareApp.controller('PostListLikes', ['$scope', 'postFactory', 'postsPerPage', 'pageFactory',
@@ -195,6 +226,7 @@ shareApp.controller('PostListLikes', ['$scope', 'postFactory', 'postsPerPage', '
 		$scope.infiniteBusy = false;
 		$scope.posts = [];
 		pageFactory.resetTitle();
+		pageFactory.setTitle('Your Likes');
 		
 		$scope.loadMore = function() {
 			$scope.infiniteBusy = true;
@@ -206,7 +238,6 @@ shareApp.controller('PostListLikes', ['$scope', 'postFactory', 'postsPerPage', '
 				$scope.loading = false;
 				$scope.infiniteBusy = false;
 				start += data.length;
-				pageFactory.setTitle('Your Likes');
 			}).error(function () {
 				// handle error
 			});
@@ -252,7 +283,12 @@ shareApp.controller('PostEdit', function ($scope, $http, $location, $routeParams
 	
 	// cancel editing and return to post
 	$scope.cancelEdit = function (post) {
-		$location.path('/post/' + post.ID);
+		if ($scope.isUnchanged(post) === false) {
+			if (confirm('Do you want to discard your changes?'))
+			$location.path('/post/' + post.ID);
+		} else {
+			$location.path('/post/' + post.ID);
+		}
 	};
 	
 	// submit changed post
@@ -278,7 +314,7 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 				$scope.post.Comments[i].Content = content;
 			}
 			
-			// init Player Source
+			// init Player
 			if (data.YouTubeID !== null) {
 				// YouTube
 				$scope.frameURL = $sce.trustAsResourceUrl('http://www.youtube.com/embed/' + data.YouTubeID);
@@ -288,11 +324,14 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 			} else if (data.VimeoID !== null) {
 				// Vimeo
 				$scope.frameURL = $sce.trustAsResourceUrl('http://player.vimeo.com/video/' + data.VimeoID);
-			} else if (data.Link.indexOf('soundcloud') > -1) {
+			} else if (data.Link != null && data.Link.indexOf('soundcloud') > -1) {
 				// SoundCloud
 				var e = angular.element(document.querySelector('iframe'));
 				e.replaceWith('<div id="SoundcloudPlayer"/>');
 				embedSoundcloud(soundcloudClientId, data.Link);
+			} else {
+				// shows error message / hides player
+				$scope.loadingError = true;
 			}
 			
 			// Posts by GenreID
@@ -303,6 +342,9 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 			postFactory.getPosts('limit=5&random=1&userId=' + $scope.post.User.ID + '&exclude=' + $scope.post.ID).success(function (data) {
 				$scope.postsUser = data;
 			});
+			
+			// set last visited page
+			pageFactory.setLastVisited($routeParams.postId);
 			
 			// controller functions
 			
@@ -336,7 +378,6 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 			
 			$scope.sendLike = function () {
 				$http.get('data/like/?postId=' + $scope.post.ID).success(function (data) {
-					
 					// check if like count is in or decreased
 					$scope.post.HasLiked = data.Likes > $scope.post.Likes;
 					
@@ -344,7 +385,7 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 				});
 			};
 			
-			// touch functions
+			// touch / swipe functions
 			
 			$scope.nextPost = function () {
 				

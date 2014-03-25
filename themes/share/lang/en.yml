@@ -23,7 +23,7 @@ en:
   Title:
     Comments: Comments
     MoreInGenre: 'More posts in'
-    MoreFromUser: 'More posts from'
+    MoreFromUser: 'More posts by'
     Newpost: 'Add Post'
     NoLikes: 'Your playlist is still empty'
     genre: 'All posts in {genre}'

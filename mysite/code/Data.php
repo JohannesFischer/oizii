@@ -8,6 +8,7 @@ class Data_Controller extends Controller {
 		'getLikes',
 		'getPost',
 		'getPosts',
+		'lastVisited',
 		'like',
 		'login',
 		'isLoggedIn',
@@ -367,6 +368,17 @@ class Data_Controller extends Controller {
 		$this->_jsonOut($arrayList->toArray());
 	}
 	
+	public function lastVisited() {
+		$params = $this->request->getVars();
+		$id = isset($params['postId']) ? (int)$params['postId'] : false;
+		
+		if ($id) {
+			Session::set('LastVisited', $id);	
+		} else {
+			// reset session var
+		}
+	}
+	
 	public function like() {
 		$params = $this->request->getVars();
 		$id = isset($params['postId']) ? (int)$params['postId'] : 0;
@@ -416,6 +428,7 @@ class Data_Controller extends Controller {
 		}
 		
 		return $this->_jsonOut(array(
+			'LastVisited' => Session::get('LastVisited'),
 			'User' => array(
 				'Name' => $member->FirstName	
 			)

@@ -168,7 +168,11 @@ class Post extends DataObject {
 		preg_match_all('/#(\w+)/', $this->Content, $matches);
 		
 		// current HashTags from DB if available
-		$hash_tags = $this->HashTags()->map('Title')->toArray();
+		$hash_tags = $this->HashTags();
+		
+		if ($hash_tags->count() > 0) {
+			$hash_tags->map('Title')->toArray();
+		}
 		$current_tags = is_array($hash_tags) ? array_values($hash_tags) : array();
 		
 		$submitted_tags = isset($matches[1]) ? $matches[1] : array();

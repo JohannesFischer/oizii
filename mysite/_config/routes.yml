@@ -6,7 +6,6 @@ Director:
   rules:
     'page//$Action!/$ID!': 'Content_Controller'
     'data//$Action!/$ID': 'Data_Controller'
-    'download//$Action!/$ID!': 'Download_Controller'
     'post//$Action!/$ID!': 'Share_Controller'
     'posts//$Action!/$ID!': 'Share_Controller'
     'user//$Action!': 'User_Controller'

@@ -35,10 +35,16 @@ class Share_Controller extends Controller {
 		Requirements::set_combined_files_folder($combined_folder);
 		
 		// include css
-		Requirements::css($css_folder . 'foundation/css/normalize.css');
-		Requirements::css($css_folder . 'foundation/css/foundation.min.css');
-		// TODO pass target folder
-		Requirements::css($css_folder . 'app.less', 'screen', BASE_PATH);
+		$css_array = array(
+			'foundation/css/normalize.css',
+			'foundation/css/foundation.min.css'
+		);		
+		foreach ($css_array as $file) {
+			Requirements::css($css_folder . $file);
+		}
+		
+		$app_css = Director::isDev() ? 'app.less' : 'app.css';
+		Requirements::css($css_folder . $app_css);
 		
 		// include js
 		$this->js_folder = $theme_folder . '/javascript/';
@@ -56,13 +62,15 @@ class Share_Controller extends Controller {
 			'controllers.js',
 			'autocomplete.js',			
 			'init.js',
-			'soundcloud.js',
-			'//connect.soundcloud.com/sdk.js'
+			'soundcloud.js'
 		);
 		foreach ($js_array as $file) {
 			Requirements::javascript($this->js_folder . $file);
 		}
 		Requirements::combine_files('scripts.js', $js_array);
+		
+		// external JS
+		Requirements::javascript('//connect.soundcloud.com/sdk.js');
 		
 		// set locale
 		if ($member = Member::CurrentUser()) {

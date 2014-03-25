@@ -17,7 +17,11 @@
 			<a href="/#/tag/{{ tag }}" ng-repeat="tag in post.HashTags">#{{ tag }}</a>
 		</section>
 
-		<div class="flex-video player widescreen" ng-class="{vimeo: post.VimeoID != null}">
+		<section class="alert-box radius alert text-center" ng-show="loadingError">
+			<p>Error loading link</p>
+		</section>
+		
+		<div class="flex-video player widescreen" ng-class="{vimeo: post.VimeoID != null}" ng-hide="loadingError">
 			<iframe width="560" height="315" src="{{ frameURL }}" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 		</div>
 
