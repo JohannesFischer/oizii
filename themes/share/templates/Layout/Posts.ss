@@ -6,6 +6,12 @@
 	</div>
 </div>
 
+<div class="row">
+	<div class="columns large-12">
+		<h3>{{ PageTitle }}</h3>
+	</div>
+</div>
+
 <section id="Posts" class="row post-list" infinite-scroll="loadMore()" infinite-scroll-disabled="infiniteBusy">
 	
 	<article class="columns large-4 medium-6 tile" ng-repeat="post in posts">

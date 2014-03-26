@@ -5,6 +5,8 @@ class Post extends DataObject {
 	private static $default_sort = 'Created DESC';
 
     private static $db = array(
+		'BandcampAlbumID' => 'Varchar(10)',
+		'BandcampTrack' => 'Varchar(2)',
 		'Content' => 'HTMLText',
 		'DailyMotionID' => 'Varchar(30)',
 		'Title' => 'Varchar(100)',
@@ -14,7 +16,6 @@ class Post extends DataObject {
     );
 	
 	private static $has_one = array(
-		'File' => 'File',
 		'Genre' => 'Genre',
 		'Member' => 'MyMember'
 	);
@@ -58,18 +59,36 @@ class Post extends DataObject {
     }
 	
 	public function getCMSFields() {
-		$dropdown_values = Genre::get()->map('ID', 'Title');    
+		$dropdown_values = Genre::get()->map('ID', 'Title');
 		
 		return new FieldList(
 			new TextField('Title'),
 			new HTMLEditorField('Content', 'Text'),
 			new DropdownField('GenreID', 'Genre', $dropdown_values, 0, null, '-- select genre --'),
-			// adjust the max upload size to your server settings
-			new UploadField('File', 'File (max. 16MB)'),
 			new TextField('Link', 'Youtube, Soundcloud, Dailymotion or Vimeo Link')
 		);
 	}
 
+	private function getBandcampDetails() {
+		preg_match_all('/\/(album|t)=([^\/]+)/', $this->Link, $matches);		
+		
+		// set bandcamp fields
+		if (isset($matches[2])) {
+			$i = 0;
+			foreach($matches[1] as $key) {
+				if ($key == 'album') {
+					$this->BandcampAlbumID = $matches[2][$i];
+				} elseif ($key == 't') {
+					$this->BandcampTrack = $matches[2][$i];
+				}
+				$i++;
+			}
+			if ($this->BandcampTrack == NULL) {
+				$this->BandcampTrack = 1;
+			}
+		}
+	}
+	
 	public function getDailyMotionID() {
 		$elements = explode('/', $this->Link);
 		$id_raw = explode('_', end($elements));
@@ -162,6 +181,10 @@ class Post extends DataObject {
 		// stores extracted Dailymotion ID if available
 		elseif (preg_match('/dailymotion/', $this->Link)) {
 			$this->DailyMotionID = $this->getDailyMotionID();
+		}
+		// stores extracted Bandcamp details
+		elseif (preg_match('/bandcamp/', $this->Link)) {
+			$this->getBandcampDetails();
 		}
 		
 		// get tags from Content

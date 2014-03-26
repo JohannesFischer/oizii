@@ -22,7 +22,7 @@
 		</section>
 		
 		<div class="flex-video player widescreen" ng-class="{vimeo: post.VimeoID != null}" ng-hide="loadingError">
-			<iframe width="560" height="315" src="{{ frameURL }}" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+			<iframe width="560" height="600" ng-src="{{ frameURL }}" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 		</div>
 
 		<p>{{ post.Likes }} Likes</p>		

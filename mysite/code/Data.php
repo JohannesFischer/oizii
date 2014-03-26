@@ -169,6 +169,8 @@ class Data_Controller extends Controller {
 		
 		// fields to catch
 		$fields = array(
+			'BandcampAlbumID',
+			'BandcampTrack',
 			array('DATE_FORMAT(Post.Created, \'%Y-%m-%d\')', 'PostCreated'),
 			'DailyMotionID',
 			array('Genre.ID', 'GenreID'),
@@ -202,6 +204,8 @@ class Data_Controller extends Controller {
 		$arrayList = new ArrayList();
 		
 		$ar = array(
+			'BandcampAlbumID' => $rowArray['BandcampAlbumID'],
+			'BandcampTrack' => $rowArray['BandcampTrack'],
 			'CanEdit' => Member::currentUserID() == $rowArray['MemberID'],
 			'Content' => $rowArray['PostContent'],
 			'Created' => $rowArray['PostCreated'],

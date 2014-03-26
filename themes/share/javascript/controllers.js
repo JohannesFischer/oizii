@@ -19,6 +19,17 @@ shareApp.factory('pageFactory', function($http) {
 
 shareApp.factory('postFactory', ['$http', '$location', function ($http, $location) {
 	return {
+		cleanBCLink: function (link) {
+			if (link !== undefined && (link).indexOf('bandcamp.com/EmbeddedPlayer/') > -1) {
+				var regex = /<iframe.*?src="(.*?)"/;
+				var match = regex.exec(link);
+				if (match[1]) {
+					return match[1];
+				}
+				return false;
+			}
+			return false;
+		},
 		getPost: function(parameter) {
 			parameter = parameter !== undefined ? '?' + parameter : '';
 			return $http.get('data/getPost' + parameter);
@@ -225,7 +236,6 @@ shareApp.controller('PostListLikes', ['$scope', 'postFactory', 'postsPerPage', '
 		var start = 0;
 		$scope.infiniteBusy = false;
 		$scope.posts = [];
-		pageFactory.resetTitle();
 		pageFactory.setTitle('Your Likes');
 		
 		$scope.loadMore = function() {
@@ -252,6 +262,15 @@ shareApp.controller('NewPost', function ($scope, postFactory) {
 	
 	$scope.submitPost = function(post) {
 		postFactory.submitPost(post);
+	};
+	
+	// checking for pasted Bandcamp iframe source end extracts src
+	$scope.cleanBCLink = function () {
+		var bcLink = postFactory.cleanBCLink($scope.post.Link);
+		
+		if (bcLink !== false) {
+			$scope.post.Link = bcLink;
+		}
 	};
 	
 	$scope.isUnchanged = function (post) {
@@ -288,6 +307,15 @@ shareApp.controller('PostEdit', function ($scope, $http, $location, $routeParams
 			$location.path('/post/' + post.ID);
 		} else {
 			$location.path('/post/' + post.ID);
+		}
+	};
+	
+	// checking for pasted Bandcamp iframe source end extracts src
+	$scope.cleanBCLink = function () {
+		var bcLink = postFactory.cleanBCLink($scope.post.Link);
+		
+		if (bcLink !== false) {
+			$scope.post.Link = bcLink;
 		}
 	};
 	
@@ -329,6 +357,9 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 				var e = angular.element(document.querySelector('iframe'));
 				e.replaceWith('<div id="SoundcloudPlayer"/>');
 				embedSoundcloud(soundcloudClientId, data.Link);
+			} else if (data.BandcampAlbumID !== null) {
+				// Bandcamp
+				$scope.frameURL = $sce.trustAsResourceUrl('http://bandcamp.com/EmbeddedPlayer/album=' + data.BandcampAlbumID + '/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/t=' + data.BandcampTrack);
 			} else {
 				// shows error message / hides player
 				$scope.loadingError = true;

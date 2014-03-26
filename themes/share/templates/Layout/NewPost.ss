@@ -20,7 +20,7 @@
 		</select>
 		
 		<label><%t Form.Link "YouTube, DailyMotion, Soundcloud or Vimeo Link" %></label>
-		<input type="url" name="pLink" ng-model="post.Link" required>
+		<input type="text" name="pLink" ng-model="post.Link" ng-change="cleanBCLink()" required>
 		
 		<button class="button" ng-click="submitPost(post)" ng-disabled="NewPost.\$invalid || isUnchanged(post)"><%t Form.Submit "save" %></button>
 		
