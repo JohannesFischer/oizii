@@ -1,4 +1,5 @@
 var shareApp = angular.module('shareApp', [
+	'ngCookies',
 	'ngRoute',
 	'ngTouch',
 	'infinite-scroll'

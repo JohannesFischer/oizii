@@ -2,14 +2,15 @@
 
 /* Factories */
 
-shareApp.factory('pageFactory', function($http) {
+shareApp.factory('pageFactory', function($http, $cookies, $location) {
 	var defaultTitle = 'oizii';
 	return {
 		resetTitle: function () {
 			document.title = defaultTitle;
 		},
 		setLastVisited: function (postId) {
-			return $http.get('data/lastVisited?postId=' + postId);
+			$cookies.lastVisited = $location.url();
+			//return $http.get('data/lastVisited?postId=' + postId);
 		},
 		setTitle: function(newTitle) {
 			document.title = defaultTitle + ' :: ' + newTitle;
@@ -63,13 +64,12 @@ shareApp.controller('About', function ($scope, $http, pageFactory) {
 	pageFactory.setTitle('About');
 	
 	$http.get('data/getGenreStats').success(function (data) {
-		console.log(data[0].Genres);
 		$scope.genres = data[0].Genres;
 	});
 });
 
 // Login
-shareApp.controller('Login', function ($scope, $http, pageFactory) {
+shareApp.controller('Login', function ($scope, $http, $cookies, pageFactory) {
 	$scope.error = false;
 	
 	$http.get('data/isLoggedIn').success(function (data) {
@@ -103,8 +103,8 @@ shareApp.controller('Login', function ($scope, $http, pageFactory) {
 				$scope.error = true;
 			} else {
 				var url = '/';
-				if (data.LastVisited) {
-					url = '/#/post/' + data.LastVisited;
+				if ($cookies.lastVisited) {
+					url = '#' + $cookies.lastVisited
 				}
 				window.location.href = url;
 			}
@@ -157,7 +157,8 @@ shareApp.controller('PostListGenre', ['$scope', '$routeParams', 'postFactory', '
 			postFactory.getPosts('limit=' + postsPerPage + '&genreId=' + $routeParams.genreId + '&start=' + start).success(function (data) {
 				if (data.length > 0) {
 					if ($scope.posts.length == 0) {
-						pageFactory.setTitle(data[0].Genre.Title);	
+						$scope.pageTitle = data[0].Genre.Title;
+						pageFactory.setTitle(data[0].Genre.Title);
 					}					
 					for (var i = 0; i < data.length; i++) {
 						$scope.posts.push(data[i]);
@@ -181,7 +182,8 @@ shareApp.controller('PostListTag', ['$scope', '$routeParams', 'postFactory', 'po
 		$scope.loading = true;
 		$scope.posts = [];
 		$scope.infiniteBusy = false;
-		pageFactory.setTitle('tag / ' + $routeParams.tag);
+		$scope.pageTitle = '#' + $routeParams.tag;
+		pageFactory.setTitle('tag #' + $routeParams.tag);
 		
 		$scope.loadMore = function() {
 			$scope.infiniteBusy = true;
@@ -215,6 +217,7 @@ shareApp.controller('PostListUser', ['$scope', '$routeParams', 'postFactory', 'p
 			postFactory.getPosts('userId=' + $routeParams.userId + '&limit=' + postsPerPage + '&start=' + start).success(function (data) {
 				if (data.length > 0) {
 					if ($scope.posts.length == 0) {
+						$scope.pageTitle = 'Posts by ' + data[0].User.Name;
 						pageFactory.setTitle(data[0].User.Name);
 					}					
 					for (var i = 0; i < data.length; i++) {
@@ -236,6 +239,7 @@ shareApp.controller('PostListLikes', ['$scope', 'postFactory', 'postsPerPage', '
 		var start = 0;
 		$scope.infiniteBusy = false;
 		$scope.posts = [];
+		$scope.pageTitle = 'Your Likes';
 		pageFactory.setTitle('Your Likes');
 		
 		$scope.loadMore = function() {
