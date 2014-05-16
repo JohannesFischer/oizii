@@ -8,6 +8,7 @@
 :: Header
 :: Autocomplete
 :: Sign In Mobile
+:. Page Title
 :: Tiles
 :: Pagination
 :: Post
@@ -28,6 +29,8 @@
 @header-light: lighten(@header-color, 10%);
 @font-color: #fff;
 @font-color-placeholder: #aaa;
+@tag-color: #008CBA;
+@tag-color-hover: #0078A0;
 
 /* Font Sizes */
 @extra-large-text: 44px;
@@ -355,12 +358,43 @@ div.search-form {
 
 .sign-in-mobile {
 	margin-bottom: @spacing-default;
+	
 	a {
 		color: @font-color;
 		display: block;
 		font-size: @medium-text;
 		text-align: center;
 	}
+}
+
+/* -----------------------------------------
+   Page Title
+----------------------------------------- */
+
+.page-title {
+	margin: 1rem 0 2rem;
+	
+	h3 {
+		background: @header-color;
+		display: inline;
+		margin-bottom: 0.5rem;
+		padding: 0.25rem 1rem;
+		position: relative;
+		
+		&:after {
+			border-color: @header-color transparent;
+			border-style: solid;
+			border-width: 0.5rem 0.5rem 0;
+			bottom: -0.5rem;
+			content: '';
+			display: block;
+			left: 50%;
+			margin-left: -0.25rem;
+			position: absolute;
+			width: 0;
+		}
+	}
+	
 }
 
 /* -----------------------------------------
@@ -373,7 +407,6 @@ div.search-form {
 
 .loading {
 	background: @header-light;
-	border-radius: 1em;
 	clear: both;
 	font-size: 1em;
 	float: none;
@@ -482,11 +515,71 @@ article {
 		}
 	}
 	
+	/* hash tags */
 	.hash-tags {
-		margin-bottom: @spacing-larger;
+		margin-bottom: @spacing-default;
+		overflow: hidden;
 		
-		a {
-			padding: 0 @spacing-default 0 0;
+		ul {
+			list-style:none;
+			margin: 0;
+			padding: 0;
+			
+			li {
+				float: left;
+				height: 24px;
+				line-height: 24px;
+				margin-bottom: 0.4rem;
+				position: relative;
+				
+				a {
+					background: @tag-color;
+					border-bottom-right-radius: 4px;
+					border-top-right-radius: 4px;
+					color: @font-color;
+					display: block;
+					margin-right: 0.7rem;
+					padding: 0px 10px 0px 12px;
+					position: relative;
+					
+					&:first-of-type {
+						margin-left: 12px;
+					}
+					
+					&:hover {
+						background: @tag-color-hover;
+						
+						&:before {
+							border-color: transparent @tag-color-hover transparent transparent;
+						}
+					}
+					
+					&:before {
+						border-color: transparent @tag-color transparent transparent;
+						border-style: solid;
+						border-width: 12px 12px 12px 0;
+						content: "";
+						float: left;
+						height: 0;
+						left: -12px;
+						position: absolute;
+						top: 0px;
+						width: 0;
+					}
+					
+					&:after {
+						background: @font-color;
+						border-radius: 50%;
+						content: "";
+						float: left;
+						height: 4px;
+						left: 0;
+						position: absolute;
+						top: 10px;
+						width: 4px;						
+					}
+				}
+			}
 		}
 	}
 	
