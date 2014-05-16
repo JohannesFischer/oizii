@@ -8,7 +8,6 @@ class Data_Controller extends Controller {
 		'getLikes',
 		'getPost',
 		'getPosts',
-		'lastVisited',
 		'like',
 		'login',
 		'isLoggedIn',
@@ -38,7 +37,7 @@ class Data_Controller extends Controller {
 	
 	private function _jsonOut($body) {
 		$response = new SS_HTTPResponse(); 
-		$response->addHeader("Content-type", "application/json");
+		$response->addHeader('Content-Type', 'application/json');
 		$response->setBody(json_encode($body));
 		$response->output();
 	}
@@ -239,7 +238,10 @@ class Data_Controller extends Controller {
 		}
 		
 		// has liked
-		$like = Like::get()->filter('PostID', $ar['ID']);
+		$like = Like::get()->filter(array(
+			'PostID' => $ar['ID'],
+			'MemberID' => Member::currentUserID()
+		));
 		$ar['HasLiked'] = $like->count() == 1;
 		
 		// add HashTags
@@ -338,7 +340,7 @@ class Data_Controller extends Controller {
 		}
 		// sorting
 		if ($random) {
-			$sqlQuery->setOrderBy('RAND(Post.ID)');
+			$sqlQuery->setOrderBy('RAND()');
 		} else {
 			$sqlQuery->setOrderBy('Post.Created DESC');	
 		}
@@ -370,17 +372,6 @@ class Data_Controller extends Controller {
 		}
 		
 		$this->_jsonOut($arrayList->toArray());
-	}
-	
-	public function lastVisited() {
-		$params = $this->request->getVars();
-		$id = isset($params['postId']) ? (int)$params['postId'] : false;
-		
-		if ($id) {
-			Session::set('LastVisited', $id);	
-		} else {
-			// reset session var
-		}
 	}
 	
 	public function like() {
@@ -432,7 +423,6 @@ class Data_Controller extends Controller {
 		}
 		
 		return $this->_jsonOut(array(
-			'LastVisited' => Session::get('LastVisited'),
 			'User' => array(
 				'Name' => $member->FirstName	
 			)
