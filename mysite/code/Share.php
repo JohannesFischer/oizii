@@ -28,46 +28,51 @@ class Share_Controller extends Controller {
 	public function init() {
 		parent::init();
 		
-		$theme_folder = 'themes/' . SSViewer::current_theme();
+		$theme_folder = 'themes/' . SSViewer::current_theme(); // $this->ThemeDir()
+
+		Requirements::set_combined_files_folder($theme_folder . '/_combinedfiles');
+		
+		// include CSS
 		$css_folder = $theme_folder . '/css/';
-		$combined_folder = $theme_folder . '/_combinedfiles';
 		
-		Requirements::set_combined_files_folder($combined_folder);
-		
-		// include css
 		$css_array = array(
-			'foundation/css/normalize.css',
-			'foundation/css/foundation.min.css'
-		);		
-		foreach ($css_array as $file) {
-			Requirements::css($css_folder . $file);
+			$css_folder . 'foundation/css/normalize.css',
+			$css_folder . 'foundation/css/foundation.min.css'
+		);
+		
+		if (Director::isLive()) {
+			array_push($css_array, $css_folder . 'app.css');
+		}
+		// combine CSS
+		Requirements::combine_files('css_min.css', $css_array);
+		
+		// inlcude LESS file in DEV environments
+		if (Director::isDev()) {
+			Requirements::css($css_folder . 'app.less');
 		}
 		
-		$app_css = Director::isDev() ? 'app.less' : 'app.css';
-		Requirements::css($css_folder . $app_css);
-		
-		// include js
+		// include JS
 		$this->js_folder = $theme_folder . '/javascript/';
 		
 		$js_array = array(
-			'third-party/jquery-1.9.1.min.js',
-			'third-party/angular.min.js',
-			'third-party/angular-route.min.js',
-			'third-party/angular-touch.min.js',
-			'third-party/angular-animate.min.js',
-			'third-party/ng-infinite-scroll.min.js',
-			'third-party/foundation/foundation.min.js',
-			'third-party/foundation/foundation/foundation.tooltip.js',
-			'app.js',
-			'controllers.js',
-			'autocomplete.js',			
-			'init.js',
-			'soundcloud.js'
+			$this->js_folder . 'third-party/jquery-1.9.1.min.js',
+			$this->js_folder . 'third-party/angular.min.js',
+			$this->js_folder . 'third-party/angular-route.min.js',
+			$this->js_folder . 'third-party/angular-touch.min.js',
+			$this->js_folder . 'third-party/angular-cookies.min.js',
+			$this->js_folder . 'third-party/angular-animate.min.js',
+			$this->js_folder . 'third-party/ng-infinite-scroll.min.js',
+			$this->js_folder . 'third-party/foundation/foundation.min.js',
+			$this->js_folder . 'third-party/foundation/foundation/foundation.tooltip.js',
+			$this->js_folder . 'app.js',
+			$this->js_folder . 'controllers.js',
+			$this->js_folder . 'autocomplete.js',			
+			$this->js_folder . 'init.js',
+			$this->js_folder . 'soundcloud.js'
 		);
-		foreach ($js_array as $file) {
-			Requirements::javascript($this->js_folder . $file);
-		}
-		Requirements::combine_files('scripts.js', $js_array);
+		
+		// combine JS
+		Requirements::combine_files('js_min.js', $js_array);
 		
 		// external JS
 		Requirements::javascript('//connect.soundcloud.com/sdk.js');
