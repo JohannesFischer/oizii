@@ -194,7 +194,7 @@ class Post extends DataObject {
 		$hash_tags = $this->HashTags();
 		
 		if ($hash_tags->count() > 0) {
-			$hash_tags->map('Title')->toArray();
+			$hash_tags = $hash_tags->map('Title')->toArray();
 		}
 		$current_tags = is_array($hash_tags) ? array_values($hash_tags) : array();
 		
@@ -211,7 +211,7 @@ class Post extends DataObject {
 			
 			// save new tags
 			foreach($submitted_tags as $tag) {
-				if ( ! preg_match('/[a-zA-z0-9]+/', $tag)) continue;
+				if ( ! preg_match('/[a-zA-Z0-9]+/', $tag)) continue;
 				if ( ! in_array($tag, $current_tags)) {
 					$hashtag = HashTag::get()->filter('Title', $tag)->First();
 					
