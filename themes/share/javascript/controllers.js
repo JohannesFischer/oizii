@@ -3,7 +3,7 @@
 /* Factories */
 
 shareApp.factory('pageFactory', function($http, $cookies, $location) {
-	var defaultTitle = 'oizii';
+	var defaultTitle = 'oizii :: share delicous music';
 	return {
 		resetTitle: function () {
 			document.title = defaultTitle;
@@ -21,7 +21,7 @@ shareApp.factory('pageFactory', function($http, $cookies, $location) {
 shareApp.factory('postFactory', ['$http', '$location', function ($http, $location) {
 	return {
 		cleanBCLink: function (link) {
-			if (link !== undefined && (link).indexOf('bandcamp.com/EmbeddedPlayer/') > -1) {
+			if (link !== undefined && ( (link).indexOf('bandcamp.com/EmbeddedPlayer/') > -1 || (link).indexOf('8tracks.com/') > -1) ) {
 				var regex = /<iframe.*?src="(.*?)"/;
 				var match = regex.exec(link);
 				if (match[1]) {
@@ -118,6 +118,7 @@ shareApp.controller('PostList', ['$scope', 'postFactory', 'postsPerPage', 'pageF
 		var start = 0;
 		// toggle Intro text
 		$scope.showIntro = true;
+		$scope.hideFilters = true;
 		$scope.posts = [];
 		$scope.infiniteBusy = false;
 		pageFactory.resetTitle();
@@ -138,6 +139,10 @@ shareApp.controller('PostList', ['$scope', 'postFactory', 'postsPerPage', 'pageF
 			}).error(function () {
 				// handle error
 			});
+		};
+		
+		$scope.toggleFilters = function () {
+			$scope.hideFilters = ! $scope.hideFilters;
 		};
 	}
 ]);
@@ -165,6 +170,10 @@ shareApp.controller('PostListGenre', ['$scope', '$routeParams', 'postFactory', '
 					}
 					$scope.infiniteBusy = false;
 					start += data.length;
+					
+					if (data.length < postsPerPage) {
+						$scope.hideLoader = true;
+					}
 				} else {
 					$scope.hideLoader = true;
 				}
@@ -284,6 +293,7 @@ shareApp.controller('NewPost', function ($scope, postFactory) {
 
 // Post Edit
 shareApp.controller('PostEdit', function ($scope, $http, $location, $routeParams, postFactory) {
+	$scope.edit = true;
 	$scope.loading = true;
 	$scope.master = {};
 	$scope.post = {};
@@ -332,6 +342,7 @@ shareApp.controller('PostEdit', function ($scope, $http, $location, $routeParams
 // Post Details
 shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParams', '$http', '$sce', 'postFactory', 'pageFactory',
 	function(soundcloudClientId, $scope, $routeParams, $http, $sce, postFactory, pageFactory) {
+		$scope.likeUsers = null;
 		$scope.loading = true;
 		$scope.commentFrombusy = false;
 		
@@ -364,6 +375,9 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 			} else if (data.BandcampAlbumID !== null) {
 				// Bandcamp
 				$scope.frameURL = $sce.trustAsResourceUrl('http://bandcamp.com/EmbeddedPlayer/album=' + data.BandcampAlbumID + '/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/t=' + data.BandcampTrack);
+			} else if (data.EightTracksID !== null) {
+				// 8Tracks
+				$scope.frameURL = $sce.trustAsResourceUrl('http://8tracks.com/mixes/' + data.EightTracksID + '/player_v3_universal');
 			} else {
 				// shows error message / hides player
 				$scope.loadingError = true;
@@ -382,6 +396,18 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 			pageFactory.setLastVisited($routeParams.postId);
 			
 			// controller functions
+			
+			$scope.getLikes = function () {
+				if ($scope.likeUsers === null && $scope.post.Likes > 0) {
+					$http.get('data/getLikes/' + $scope.post.ID ).success(function (data) {
+						var usr = [];
+						for (var i = 0; i < data.length; i++) {
+							usr.push(data[i].User.Name);
+						}
+						$scope.likeUsers = usr.join(', ');
+					});
+				}
+			};
 			
 			$scope.sendComment = function () {
 				$scope.commentFrombusy = true;
@@ -428,3 +454,50 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 		});
 	}
 ]);
+
+// Playlist
+shareApp.controller('Playlist', function ($scope, $http, $document, $window, postFactory, constructor) {
+	var currentVideoID;
+	$scope.loading = true;
+	$scope.posts = [];
+	
+	postFactory.getPosts('likes=1&youtube=1').success(function(data) {
+		$scope.loading = false;
+		
+		for (var i = 0; i < data.length; i++) {
+			$scope.posts.push(data[i]);
+		}
+		
+		$scope.loading = false;
+		
+		$scope.currentVideoID = data[0].YouTubeID;
+	});
+	
+	var tag = $document[0].createElement('script');
+	tag.src = "https://www.youtube.com/iframe_api";
+	var firstScriptTag = $document[0].getElementsByTagName( 'script' )[0];
+	firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
+	
+	$window.onYouTubePlayerAPIReady = function() {
+		
+		console.log('onYouTubePlayerAPIReady');
+		
+		var player = new YT.Player( 'Player', {
+			height: '390',
+			width: '100%',
+			//videoId: $scope.currentVideoID,
+			//playerVars: vars,
+			events: {
+				'onReady': function(event) {
+					event.target.playVideo();
+				},
+				'onStateChange': function(event) {
+					if (event.target.getPlayerState() === 0) {
+						console.log('next');
+					}
+				}
+			},
+			title: 'sup'
+		});
+	};
+});

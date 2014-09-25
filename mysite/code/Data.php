@@ -142,6 +142,8 @@ class Data_Controller extends Controller {
 		$params = $this->getURLParams();
 		$id = (int)$params['ID'];
 		
+		if ($id == 0) $this->_forbidden();
+		
 		$member = Member::get()->leftJoin('Like', 'Like.MemberID = Member.ID')->filter(array(
 			'PostID' => $id
 		))->sort('Member.FirstName', 'ASC');
@@ -172,6 +174,7 @@ class Data_Controller extends Controller {
 			'BandcampTrack',
 			array('DATE_FORMAT(Post.Created, \'%Y-%m-%d\')', 'PostCreated'),
 			'DailyMotionID',
+			'EightTracksID',
 			array('Genre.ID', 'GenreID'),
 			array('Genre.Title', 'GenreTitle'),
 			array('Member.ID', 'MemberID'),
@@ -209,6 +212,7 @@ class Data_Controller extends Controller {
 			'Content' => $rowArray['PostContent'],
 			'Created' => $rowArray['PostCreated'],
 			'DailyMotionID' => $rowArray['DailyMotionID'],
+			'EightTracksID' => $rowArray['EightTracksID'],
 			'Genre' => array(
 				'ID' => $rowArray['GenreID'],
 				'Title' => $rowArray['GenreTitle']
@@ -293,6 +297,7 @@ class Data_Controller extends Controller {
 		$random = isset($get_data['random']) ? (bool)$get_data['random'] : false;
 		$start = isset($get_data['start']) ? (int)$get_data['start'] : 0;
 		$tag = isset($get_data['tag']) ? Convert::raw2sql($get_data['tag']) : false;
+		$youtube = isset($get_data['youtube']) ? (bool)$get_data['youtube'] : false;
 		
 		$sqlQuery = new SQLQuery();
 		$sqlQuery->setFrom('Post');
@@ -313,10 +318,9 @@ class Data_Controller extends Controller {
 			$sqlQuery->addInnerJoin('Like', 'Like.PostId = Post.ID');
 			$sqlQuery->addWhere('Like.MemberID = ' . Member::currentUserID());
 		}
-		// likes only
-		if ($likes) {
-			$sqlQuery->addInnerJoin('Like', 'Like.PostId = Post.ID');
-			$sqlQuery->addWhere('Like.MemberID = ' . Member::currentUserID());
+		// youtube only for playlist
+		if ($youtube) {
+			$sqlQuery->addWhere('Post.YouTubeID != \'\'');
 		}
 		
 		// exclude
@@ -349,13 +353,13 @@ class Data_Controller extends Controller {
 		} else if ($limit && $start) {
 			$sqlQuery->setLimit($limit, $start);
 		}
-		// Debug::dump($sqlQuery->sql());exit;
+		
 		// Execute and return a Query object
 		$result = $sqlQuery->execute();
 		
 		$arrayList = new ArrayList();
 		foreach($result as $rowArray) {
-			$arrayList->push(array(
+			$a = array(
 				'Created' => $rowArray['PostCreated'],
 				'Genre' => array(
 					'ID' => $rowArray['GenreID'],
@@ -368,7 +372,13 @@ class Data_Controller extends Controller {
 					'ID' => $rowArray['MemberID'],
 					'Name' => $rowArray['FirstName']
 				)
-			));
+			);
+			
+			if ($youtube) {
+				$a['YouTubeID'] = $rowArray['YouTubeID'];
+			}
+			
+			$arrayList->push($a);
 		}
 		
 		$this->_jsonOut($arrayList->toArray());
@@ -451,7 +461,7 @@ class Data_Controller extends Controller {
 		// retrieve and validate data
 		$data = json_decode(file_get_contents('php://input'), true);
 		
-		// TODO validate		
+		// TODO validate
 		if ( ! array_key_exists('Title', $data) || ! array_key_exists('Link', $data) || ! array_key_exists('Genre', $data)) {
 			return $this->_error();
 		}

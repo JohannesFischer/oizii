@@ -9,6 +9,7 @@ class Post extends DataObject {
 		'BandcampTrack' => 'Varchar(2)',
 		'Content' => 'HTMLText',
 		'DailyMotionID' => 'Varchar(30)',
+		'EightTracksID' => 'Varchar',
 		'Title' => 'Varchar(100)',
 		'Link' => 'Varchar(250)',
 		'VimeoID' => 'Varchar(20)',
@@ -98,6 +99,11 @@ class Post extends DataObject {
 		return false;
 	}
 	
+	public function getEightTracksID() {
+		preg_match('/mixes\/([^\/]*)/', $this->Link, $match);
+		return $match[1];
+	}
+	
 	public function getLikes() {
 		return Member::get()
 		       ->leftJoin('Like', 'Like.MemberID = Member.ID')
@@ -157,11 +163,9 @@ class Post extends DataObject {
 		))->First();
 	}
 	
-	public function onAfterWrite() {
-		parent::onAfterWrite();
-		
-		
-	}
+	//public function onAfterWrite() {
+	//	parent::onAfterWrite();
+	//}
 	
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();
@@ -169,6 +173,10 @@ class Post extends DataObject {
 		// set MemberID
 		if ( ! $this->MemberID) {
 			$this->MemberID = Member::currentUserID();
+		}
+		// stores extracted 8tracks id if available
+		if (preg_match('/8tracks/', $this->Link)) {
+			$this->EightTracksID = $this->getEightTracksID();
 		}
 		// stores extracted vimeo id if available
 		if (preg_match('/vimeo/', $this->Link)) {
