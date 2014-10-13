@@ -168,6 +168,7 @@ ja:
     TEXT2: 'パスワードリセットのリンク'
     TEXT3: は
   Form:
+    CSRF_FAILED_MESSAGE: "技術的な問題が生じた可能性があります。 戻るボタンをクリックしてブラウザを更新し、もう一度試してください。"
     FIELDISREQUIRED: '{name} が必要'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'クレジットカード番号 {number} が正しく入力されたかどうか確認してください'
@@ -336,6 +337,7 @@ ja:
     ERRORLOCKEDOUT2: '複数回ログインに失敗したため、あなたのアカウントは一時的に使用不可能になっています。　{count} 分後に再びログインしてください。'
     ERRORNEWPASSWORD: '入力されたパスワードが一致しません。再度お試しください'
     ERRORPASSWORDNOTMATCH: '登録されているパスワードと一致しません、もう一度入力し直してください'
+    ERRORWRONGCRED: 'メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください'
     FIRSTNAME: '名'
     INTERFACELANG: '画面言語'
     INVALIDNEWPASSWORD: '次のパスワードは受け付けることができません: {password}'

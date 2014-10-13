@@ -55,8 +55,9 @@ class HTMLText extends Text {
 	 *   - whitelist: If provided, a comma-separated list of elements that will be allowed to be stored
 	 *                (be careful on relying on this for XSS protection - some seemingly-safe elements allow
 	 *                attributes that can be exploited, for instance <img onload="exploiting_code();" src="..." />)
-	 *
-	 * @return void
+	 *                Text nodes outside of HTML tags are filtered out by default, but may be included by adding
+	 *                the text() directive. E.g. 'link,meta,text()' will allow only <link /> <meta /> and text at
+	 *                the root level.
 	 */
 	public function setOptions(array $options = array()) {
 		parent::setOptions($options);
@@ -164,7 +165,7 @@ class HTMLText extends Text {
 		/* Then look for the first sentence ending. We could probably use a nice regex, but for now this will do */
 		$words = preg_split('/\s+/', $paragraph);
 		foreach ($words as $i => $word) {
-			if (preg_match('/\.$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
+			if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
 				return implode(' ', array_slice($words, 0, $i+1));
 			}
 		}
@@ -184,20 +185,36 @@ class HTMLText extends Text {
 	}
 
 	public function prepValueForDB($value) {
+		return parent::prepValueForDB($this->whitelistContent($value));
+	}
+	
+	/**
+	 * Filter the given $value string through the whitelist filter
+	 * 
+	 * @param string $value Input html content
+	 * @return string Value with all non-whitelisted content stripped (if applicable)
+	 */
+	public function whitelistContent($value) {
 		if($this->whitelist) {
 			$dom = Injector::inst()->create('HTMLValue', $value);
 
 			$query = array();
-			foreach ($this->whitelist as $tag) $query[] = 'not(self::'.$tag.')';
+			$textFilter = ' | //body/text()';
+			foreach ($this->whitelist as $tag) {
+				if($tag === 'text()') {
+					$textFilter = ''; // Disable text filter if allowed
+				} else {
+					$query[] = 'not(self::'.$tag.')';
+				}
+			}
 
-			foreach($dom->query('//body//*['.implode(' and ', $query).']') as $el) {
+			foreach($dom->query('//body//*['.implode(' and ', $query).']'.$textFilter) as $el) {
 				if ($el->parentNode) $el->parentNode->removeChild($el);
 			}
 
 			$value = $dom->getContent();
 		}
-
-		return parent::prepValueForDB($value);
+		return $value;
 	}
 
 	/**

@@ -1235,7 +1235,7 @@ class UploadField extends FileField {
 		// Format response with json
 		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
 		$response->addHeader('Content-Type', 'text/plain');
-		if(!empty($return['error'])) $response->setStatusCode(403);
+		if (!empty($return['error'])) $response->setStatusCode(403);
 		return $response;
 	}
 
@@ -1262,34 +1262,51 @@ class UploadField extends FileField {
 	}
 	
 	/**
+	 * Check if file exists, both checking filtered filename and exact filename
+	 * 
+	 * @param string $originalFile Filename
+	 * @return bool
+	 */
+	protected function checkFileExists($originalFile) {
+		
+		// Check both original and safely filtered filename
+		$nameFilter = FileNameFilter::create();
+		$filteredFile = $nameFilter->filter($originalFile);
+		
+		// Resolve expected folder name
+		$folderName = $this->getFolderName();
+		$folder = Folder::find_or_make($folderName);
+		$parentPath = $folder
+			? BASE_PATH."/".$folder->getFilename()
+			: ASSETS_PATH."/";
+		
+		// check if either file exists
+		return file_exists($parentPath.$originalFile)
+			|| file_exists($parentPath.$filteredFile);
+	}
+	
+	/**
 	 * Determines if a specified file exists
 	 * 
 	 * @param SS_HTTPRequest $request
 	 */
 	public function fileexists(SS_HTTPRequest $request) {
-		
-		// Check both original and safely filtered filename
+		// Assert that requested filename doesn't attempt to escape the directory
 		$originalFile = $request->requestVar('filename');
-		$nameFilter = FileNameFilter::create();
-		$filteredFile = basename($nameFilter->filter($originalFile));
-		
-		// Resolve expected folder name
-		$folderName = $this->getFolderName();
-		$folder = Folder::find_or_make($folderName);
-		$parentPath = BASE_PATH."/".$folder->getFilename();
-		
-		// check if either file exists
-		$exists = false;
-		foreach(array($originalFile, $filteredFile) as $file) {
-			if(file_exists($parentPath.$file)) {
-				$exists = true;
-				break;
-			}
+		if($originalFile !== basename($originalFile)) {
+			$return = array(
+				'error' => _t('File.NOVALIDUPLOAD', 'File is not a valid upload')
+			);
+		} else {
+			$return = array(
+				'exists' => $this->checkFileExists($originalFile)
+			);
 		}
 		
 		// Encode and present response
-		$response = new SS_HTTPResponse(Convert::raw2json(array('exists' => $exists)));
+		$response = new SS_HTTPResponse(Convert::raw2json($return));
 		$response->addHeader('Content-Type', 'application/json');
+		if (!empty($return['error'])) $response->setStatusCode(400);
 		return $response;
 	}
 

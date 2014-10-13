@@ -307,7 +307,7 @@ sk:
     PERMAGAIN: 'Boli ste odhlásený'
     PERMALREADY: 'Je mi ľúto, ale nemáte prístup k tejto časti CMS. Ak sa chcete prihlásiť ako niekto iný, urobte tak nižšie'
     PERMDEFAULT: 'Vyberte si prosím metódu autentifikácie a zadajte svoje prístupové údaje k CMS.'
-    PLEASESAVE: 'Prosím uložte stránku: Táto stránka nemôže byť aktualizovaná, lebo ešte nebola uložená.'
+    PLEASESAVE: 'Uložte stránku, prosím. Táto stránka nemôže byť aktualizovaná, pretože eště nebola uložená.'
     PreviewButton: Náhľad
     REORGANISATIONSUCCESSFUL: 'Strom webu bol reorganizovaný úspešne.'
     SAVEDUP: Uložené.
@@ -490,7 +490,7 @@ sk:
     IMPORTUSERS: 'Importovať požívateľov'
     MEMBERS: Členovia
     MENUTITLE: Bezpečnosť
-    MemberListCaution: 'Upozornenie: Odstánenie členov z tohto zoznamu ich odstráni zo všetkých skupín a databázy.'
+    MemberListCaution: 'Upozornenie: Odstránenie členov z tohto zoznamu ich odstráni zo všetkých skupín a databázy.'
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Právomoci
     ROLES: Úlohy

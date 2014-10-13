@@ -683,7 +683,7 @@ class Form extends RequestHandler {
 	 * @return String
 	 */
 	public function getAttribute($name) {
-		return @$this->attributes[$name];
+		if(isset($this->attributes[$name])) return $this->attributes[$name];
 	}
 
 	public function getAttributes() {
@@ -1249,7 +1249,7 @@ class Form extends RequestHandler {
 		$dataFields = $this->fields->saveableFields();
 		$lastField = null;
 		if($dataFields) foreach($dataFields as $field) {
-			// Skip fields that have been exlcuded
+			// Skip fields that have been excluded
 			if($fieldList && is_array($fieldList) && !in_array($field->getName(), $fieldList)) continue;
 
 
@@ -1366,7 +1366,7 @@ class Form extends RequestHandler {
 			. " value=\"" . $this->FormAction() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_name\" value=\"" . $this->FormName() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_method\" value=\"" . $this->FormMethod() . "\" />\n";
-		$content .= "<input type=\"hidden\" name=\"_form_enctype\" value=\"" . $this->FormEncType() . "\" />\n";
+		$content .= "<input type=\"hidden\" name=\"_form_enctype\" value=\"" . $this->getEncType() . "\" />\n";
 
 		return $content;
 	}
