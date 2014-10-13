@@ -1,0 +1,35 @@
+{
+  "name": "Share Angular",
+  "version": "0.1",
+  "homepage": "http://oizii.com/",
+  "authors": [
+    "Johannes <git@johannes-fischer.de>"
+  ],
+  "description": "a music sharing website",
+  "main": "*",
+  "keywords": [
+    "share",
+    "angular",
+    "music",
+    "sapphire"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.26",
+    "angular-animate": "~1.2.26",
+    "angular-route": "~1.2.26",
+    "angular-touch": "~1.2.26",
+    "ng-infinite-scroller-origin": "~1.1.2",
+    "angucomplete": "*",
+    "angular-cookies": "~1.2.26",
+    "foundation": "~5.4.6"
+  }
+}

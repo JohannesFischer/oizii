@@ -17,6 +17,8 @@ class Share_Controller extends Controller {
 		'likes',
 		'login',
 		'newpost',
+		'player',
+		'playlist',
 		'post',
 		'posts',
 		'savepost',
@@ -28,16 +30,16 @@ class Share_Controller extends Controller {
 	public function init() {
 		parent::init();
 		
-		$theme_folder = 'themes/' . SSViewer::current_theme(); // $this->ThemeDir()
+		$theme_folder = 'themes/' . SSViewer::current_theme() . '/'; // $this->ThemeDir()
 
-		Requirements::set_combined_files_folder($theme_folder . '/_combinedfiles');
+		Requirements::set_combined_files_folder($theme_folder . '_combinedfiles');
 		
 		// include CSS
-		$css_folder = $theme_folder . '/css/';
+		$css_folder = $theme_folder . 'css/';
 		
 		$css_array = array(
-			$css_folder . 'foundation/css/normalize.css',
-			$css_folder . 'foundation/css/foundation.min.css'
+			$theme_folder . 'bower/foundation/css/normalize.css',
+			$theme_folder . 'bower/foundation/css/foundation.css'
 		);
 		
 		if (Director::isLive()) {
@@ -52,21 +54,22 @@ class Share_Controller extends Controller {
 		}
 		
 		// include JS
-		$this->js_folder = $theme_folder . '/javascript/';
+		$this->js_folder = $theme_folder . 'javascript/';
 		
 		$js_array = array(
-			$this->js_folder . 'third-party/jquery-1.9.1.min.js',
-			$this->js_folder . 'third-party/angular.min.js',
-			$this->js_folder . 'third-party/angular-route.min.js',
-			$this->js_folder . 'third-party/angular-touch.min.js',
-			$this->js_folder . 'third-party/angular-cookies.min.js',
-			$this->js_folder . 'third-party/angular-animate.min.js',
-			$this->js_folder . 'third-party/ng-infinite-scroll.min.js',
-			$this->js_folder . 'third-party/foundation/foundation.min.js',
-			$this->js_folder . 'third-party/foundation/foundation/foundation.tooltip.js',
+			$theme_folder . 'bower/jquery/dist/jquery.min.js',
+			$theme_folder . 'bower/angular/angular.min.js',
+			$theme_folder . 'bower/angular-route/angular-route.min.js',
+			$theme_folder . 'bower/angular-touch/angular-touch.min.js',
+			$theme_folder . 'bower/angular-cookies/angular-cookies.min.js',
+			$theme_folder . 'bower/angular-animate/angular-animate.min.js',
+			$theme_folder . 'bower/ng-infinite-scroller-origin/build/ng-infinite-scroll.min.js',
+			$theme_folder . 'bower/angucomplete/angucomplete.js',
+			$theme_folder . 'bower/foundation/js/foundation.min.js',
 			$this->js_folder . 'app.js',
 			$this->js_folder . 'controllers.js',
-			$this->js_folder . 'autocomplete.js',			
+			$this->js_folder . 'autocomplete.js',
+			$this->js_folder . 'playlist.js',
 			$this->js_folder . 'init.js',
 			$this->js_folder . 'soundcloud.js'
 		);
@@ -237,14 +240,6 @@ class Share_Controller extends Controller {
 		$response->output();
 	}
 	
-	public function getTitle() {
-		if ($this->post) {
-			return $this->post->Title;
-		}
-		
-		return false;
-	}
-	
 	private function includeFormJS() {
 		$js_files = array(
 			'third-party/foundation/vendor/zepto.js',
@@ -313,14 +308,23 @@ JS
 		}
 	}
 	
+	public function player() {
+		return $this->renderWith(array('player'));
+	}
+	
+	public function playlist() {
+		return $this->renderWith(array('playlist'));
+	}
+	
 	public function post() {
-		return $this->renderWith(array('Post'), array(
-			'Post' => array()
-		));
+		return $this->renderWith(array('Post'));
 	}
 	
 	public function posts() {
-		return $this->renderWith(array('Posts'));
+		return $this->renderWith(array('Posts'), array(
+			'Genres' => Genre::get()->sort('Title'),
+			'Users' => MyMember::get()->filter('HideInList', false)->sort('FirstName')
+		));
 	}
 	
 	public function savepost() {
@@ -358,17 +362,7 @@ JS
 	}
 	
 	public function search() {
-		$params = $this->getURLParams();
-		$search_term = $params['ID'];
-		
-		$posts = Post::get()->filter(array(
-			'Title:PartialMatch' => $search_term
-		));
-		
-		return $this->renderWith(array('Share', 'Page'), array(
-			'Posts' => $posts,
-			'SearchTerm' => $search_term
-		)); 
+		return $this->renderWith(array('Posts')); 
 	}
 	
 	public function unlike() {
