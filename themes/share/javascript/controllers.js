@@ -10,15 +10,14 @@ shareApp.factory('pageFactory', function($http, $cookies, $location) {
 		},
 		setLastVisited: function (postId) {
 			$cookies.lastVisited = $location.url();
-			//return $http.get('data/lastVisited?postId=' + postId);
 		},
 		setTitle: function(newTitle) {
-			document.title = defaultTitle + ' :: ' + newTitle;
+			document.title = newTitle + ' :: ' + defaultTitle;
 		}
 	};
 });
 
-shareApp.factory('postFactory', ['$http', '$location', function ($http, $location) {
+shareApp.factory('postFactory', ['$http', '$location', '$q', '$log', function ($http, $location, $q, $log) {
 	return {
 		cleanBCLink: function (link) {
 			if (link !== undefined && ( (link).indexOf('bandcamp.com/EmbeddedPlayer/') > -1 || (link).indexOf('8tracks.com/') > -1) ) {
@@ -36,8 +35,14 @@ shareApp.factory('postFactory', ['$http', '$location', function ($http, $locatio
 			return $http.get('data/getPost' + parameter);
 		},
 		getPosts: function(parameter) {
-			parameter = parameter !== undefined ? '?' + parameter : '';
-			return $http.get('data/getPosts' + parameter);
+      var deferred = $q.defer();
+      $http.get('data/getPosts' + parameter).success(function(data) {
+        deferred.resolve(data);
+      }).error(function(msg, code) {
+         deferred.reject(msg);
+         $log.error(msg, code);
+      });
+      return deferred.promise;
 		},
 		submitPost: function (formData) {
 			$http({
@@ -55,6 +60,74 @@ shareApp.factory('postFactory', ['$http', '$location', function ($http, $locatio
 		}
 	}
 }]);
+
+/* Provider */
+
+shareApp.provider('postService', function() {
+  var data, promise;
+  
+  data = {
+    error: false,
+    infiniteBusy: false,
+    loading: false,
+    posts: [],
+    title: null,
+    start: 0
+  };
+
+  this.$get = function(postFactory, postsPerPage, $log) {
+    return {
+      data: data,
+      add: function (item) {
+        data.posts.push(item);
+      },
+      getPosts: function (parameter) {
+        // disable infinte-scroll
+        data.infiniteBusy = true;
+        data.loading = true;
+        
+        // add URL params
+        parameter = parameter === undefined ? '?' : '?' + parameter + '&';
+        parameter += 'limit=' + postsPerPage;
+        parameter += data.start > 0 ? '&start=' + data.start : '';
+        
+        postFactory.getPosts(parameter).then(
+          function(response) {
+            if (response.length > 0) {
+              for (var i = 0; i < response.length; i++) {
+                data.posts.push(response[i]);
+              }
+              // if less posts returned than perPage
+              if (response.length != postsPerPage) {
+                data.loading = false;
+              } else {
+                data.start += response.length;
+                data.infiniteBusy = false;
+              }
+            } else {
+              data.loading = false;
+            }
+          },
+          function(errorPayload) {
+            data.error = true;
+            $log.error('failure loading movie', errorPayload);
+          });
+      },
+      getValue: function (obj) {
+        return data['posts'];
+      },
+      clear: function () {
+        data.posts = [];
+        data.start = 0;
+        data.infiniteBusy = false;
+        data.loading = false;
+      },
+      setTitle: function (title) {
+        data.title = title;
+      }
+    };
+  };
+});
 
 /* Controllers */
 
@@ -113,33 +186,20 @@ shareApp.controller('Login', function ($scope, $http, $cookies, pageFactory) {
 });
 
 // PostList
-shareApp.controller('PostList', ['$scope', 'postFactory', 'postsPerPage', 'pageFactory',
-	function ($scope, postFactory, postsPerPage, pageFactory) {
-		var start = 0;
+shareApp.controller('PostList', ['$scope', 'postService', 'pageFactory',
+	function ($scope, postService, pageFactory) {
+    $scope.data = postService.data;
+    postService.clear();
+    
 		// toggle Intro text
 		$scope.showIntro = true;
 		$scope.hideFilters = true;
-		$scope.posts = [];
-		$scope.infiniteBusy = false;
+
 		pageFactory.resetTitle();
-		
-		$scope.loadMore = function() {
-			$scope.infiniteBusy = true;
-			
-			postFactory.getPosts('limit=' + postsPerPage + '&start=' + start).success(function (data) {
-				if (data.length > 0) {
-					for (var i = 0; i < data.length; i++) {
-						$scope.posts.push(data[i]);
-					}
-					$scope.infiniteBusy = false;
-					start += data.length;
-				} else {
-					$scope.hideLoader = true;
-				}
-			}).error(function () {
-				// handle error
-			});
-		};
+    
+		$scope.loadMore = function () {
+      postService.getPosts();
+    };
 		
 		$scope.toggleFilters = function () {
 			$scope.hideFilters = ! $scope.hideFilters;
@@ -148,97 +208,50 @@ shareApp.controller('PostList', ['$scope', 'postFactory', 'postsPerPage', 'pageF
 ]);
 
 // PostList by Genre
-shareApp.controller('PostListGenre', ['$scope', '$routeParams', 'postFactory', 'postsPerPage', 'pageFactory',
-	function ($scope, $routeParams, postFactory, postsPerPage, pageFactory) {
-		var start = 0;
-		$scope.loading = true;
-		$scope.posts = [];
-		$scope.infiniteBusy = false;
-		pageFactory.resetTitle();
+shareApp.controller('PostListGenre', ['$scope', '$routeParams', 'postService', 'pageFactory',
+	function ($scope, $routeParams, postService, pageFactory) {
+		$scope.data = postService.data;
+    postService.clear();
+		// todo set title
+    pageFactory.resetTitle();
 		
 		$scope.loadMore = function() {
-			$scope.infiniteBusy = true;
-			
-			postFactory.getPosts('limit=' + postsPerPage + '&genreId=' + $routeParams.genreId + '&start=' + start).success(function (data) {
-				if (data.length > 0) {
-					if ($scope.posts.length == 0) {
-						$scope.pageTitle = data[0].Genre.Title;
-						pageFactory.setTitle(data[0].Genre.Title);
-					}					
-					for (var i = 0; i < data.length; i++) {
-						$scope.posts.push(data[i]);
-					}
-					$scope.infiniteBusy = false;
-					start += data.length;
-					
-					if (data.length < postsPerPage) {
-						$scope.hideLoader = true;
-					}
-				} else {
-					$scope.hideLoader = true;
-				}
-			}).error(function () {
-				// handle error
-			});
+      postService.getPosts('genreId=' + $routeParams.genreId);
 		};
+    
+    $scope.title = postService.getValue('posts[0].Genre.Title');
+    console.log($scope.title);
 	}
 ]);
 
 // PostList by Tag
-shareApp.controller('PostListTag', ['$scope', '$routeParams', 'postFactory', 'postsPerPage', 'pageFactory',
-	function ($scope, $routeParams, postFactory, postsPerPage, pageFactory) {
-		var start = 0;
-		$scope.loading = true;
-		$scope.posts = [];
-		$scope.infiniteBusy = false;
-		$scope.pageTitle = '#' + $routeParams.tag;
-		pageFactory.setTitle('tag #' + $routeParams.tag);
+shareApp.controller('PostListTag', ['$scope', '$routeParams', 'postService', 'pageFactory',
+	function ($scope, $routeParams, postService, pageFactory) {
+		$scope.data = postService.data;
+    postService.clear();
+		
+    pageFactory.resetTitle();
 		
 		$scope.loadMore = function() {
-			$scope.infiniteBusy = true;
-			
-			postFactory.getPosts('limit=' + postsPerPage + '&tag=' + $routeParams.tag + '&start=' + start).success(function (data) {
-				for (var i = 0; i < data.length; i++) {
-					$scope.posts.push(data[i]);
-				}
-				$scope.loading = false;
-				$scope.infiniteBusy = false;
-				start += data.length;
-			}).error(function () {
-				// handle error
-			});
+      postService.getPosts('tag=' + $routeParams.tag);
 		};
+    
+		$scope.pageTitle = '#' + $routeParams.tag;
+		pageFactory.setTitle('tag #' + $routeParams.tag);
 	}
 ]);
 
 // PostList by User
-shareApp.controller('PostListUser', ['$scope', '$routeParams', 'postFactory', 'postsPerPage', 'pageFactory',
-	function ($scope, $routeParams, postFactory, postsPerPage, pageFactory) {
-		var start = 0;
-		$scope.loading = true;
-		$scope.posts = [];
-		pageFactory.resetTitle();
-		$scope.infiniteBusy = false;
+shareApp.controller('PostListUser', ['$scope', '$routeParams', 'postService', 'pageFactory',
+	function ($scope, $routeParams, postService, pageFactory) {
+		$scope.data = postService.data;
+    postService.clear();
+		// todo set title
+    pageFactory.resetTitle();
 		
 		$scope.loadMore = function() {
-			$scope.infiniteBusy = true;
-		
-			postFactory.getPosts('userId=' + $routeParams.userId + '&limit=' + postsPerPage + '&start=' + start).success(function (data) {
-				if (data.length > 0) {
-					if ($scope.posts.length == 0) {
-						$scope.pageTitle = 'Posts by ' + data[0].User.Name;
-						pageFactory.setTitle(data[0].User.Name);
-					}					
-					for (var i = 0; i < data.length; i++) {
-						$scope.posts.push(data[i]);
-					}
-					$scope.infiniteBusy = false;
-					start += data.length;
-				} else {
-					$scope.hideLoader = true;
-				}
-			});
-		}
+      postService.getPosts('userId=' + $routeParams.userId);
+		};
 	}
 ]);
 
@@ -384,13 +397,22 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 			}
 			
 			// Posts by GenreID
-			postFactory.getPosts('limit=5&random=1&genreId=' + $scope.post.Genre.ID + '&exclude=' + $scope.post.ID).success(function (data) {
-				$scope.postsGenre = data;
-			});
+      postFactory.getPosts('?limit=5&random=1&genreId=' + $scope.post.Genre.ID + '&exclude=' + $scope.post.ID).then(
+        function(response) {
+          $scope.postsGenre = response;
+        },
+        function(errorPayload) {
+          //$log.error('failure loading movie', errorPayload);
+        });
+			
 			// Posts by UserID
-			postFactory.getPosts('limit=5&random=1&userId=' + $scope.post.User.ID + '&exclude=' + $scope.post.ID).success(function (data) {
-				$scope.postsUser = data;
-			});
+      postFactory.getPosts('?limit=5&random=1&userId=' + $scope.post.User.ID + '&exclude=' + $scope.post.ID).then(
+        function(response) {
+          $scope.postsUser = response;
+        },
+        function(errorPayload) {
+          //$log.error('failure loading movie', errorPayload);
+        });
 			
 			// set last visited page
 			pageFactory.setLastVisited($routeParams.postId);
@@ -501,3 +523,24 @@ shareApp.controller('Playlist', function ($scope, $http, $document, $window, pos
 		});
 	};
 });
+
+// Search
+shareApp.controller('Search', ['$scope', '$routeParams', '$location', 'postService', 'pageFactory',
+	function ($scope, $routeParams, $location, postService, pageFactory) {
+    $scope.data = postService.data;
+    
+		// todo set title
+		pageFactory.resetTitle();
+    
+    if ($routeParams.searchString != undefined) {
+      postService.clear();
+      $scope.loadMore = function() {
+        postService.getPosts('search=' + $routeParams.searchString);
+      };
+    }
+    
+		$scope.search = function () {
+      $location.path('/search/' + $scope.searchString);
+    };
+	}
+]);

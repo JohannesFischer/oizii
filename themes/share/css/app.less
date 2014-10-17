@@ -1,6 +1,7 @@
 /* -------------------------------------------------- 
    Table of Contents
 -----------------------------------------------------
+:: LESS
 :: Shared Styles
 :: Typography
 :: Colors
@@ -8,7 +9,7 @@
 :: Header
 :: Autocomplete
 :: Sign In Mobile
-:. Page Title
+:: Page Title
 :: Tiles
 :: Pagination
 :: Post
@@ -21,6 +22,10 @@
 :: Mobile Styles
 */
 
+/* -----------------------------------------
+   LESS
+----------------------------------------- */
+
 /* Colors */
 @body-color: #524C49;
 @chart-base: #132D54;
@@ -28,7 +33,7 @@
 @header-dark: darken(@header-color, 10%);
 @header-light: lighten(@header-color, 10%);
 @font-color: #fff;
-@font-color-placeholder: #aaa;
+@font-color-placeholder: #888;
 @tag-color: #008CBA;
 @tag-color-hover: #0078A0;
 
@@ -106,6 +111,7 @@ h5,
 h6,
 p,
 a,
+span,
 li,
 label,
 a.button {
@@ -165,16 +171,49 @@ li {
 	margin: 0;
 }
 
+.callout span.toggle-filters {
+	color: #333;
+	cursor: pointer;
+	display: block;
+	font-weight: bold;
+	padding: 0 0 0 1.2rem;
+	position: relative;
+	
+	&.open {
+		margin-bottom: @spacing-default;
+	}
+	
+	&:before {
+		border-color: transparent transparent transparent #666;
+		border-style: solid;
+		border-width: 0.5rem 0 0.5rem 0.5rem;
+		content: '';
+		display: block;
+		left: 0;
+		margin-top: -0.5rem;
+		position: absolute;
+		top: 50%;
+		width: 0;
+	}
+	
+	&.open:before {
+		border-color: #666 transparent;
+		border-width: 0.5rem 0.5rem 0;
+		margin-top: -0.25rem;
+	}
+}
+
 /* -----------------------------------------
    Forms
 ----------------------------------------- */
 
 header form {
-    margin: 4px 0 0;
+  margin: 4px 0 0;
 }
 
-input[type=search] {
-    border-radius: 4px;
+input[type=search],
+input.autocomplete-input {
+  border-radius: 4px;
 	height: 1.97rem;
 	margin: 0;
 }
@@ -189,6 +228,7 @@ textarea:-moz-placeholder { color: @font-color-placeholder; }
 form label {
 	color: @font-color;
 	cursor: default;
+  
 	&.left {
 		float: none;
 	}
@@ -307,50 +347,7 @@ a.notifications {
    Autocomplete
 ----------------------------------------- */
 
-div.search-form {
-	position: relative;
-}
-
-.autocomplete-list {
-	background: #fff;
-	box-shadow: 0 5px 5px rgba(0, 0, 0, .5);
-	list-style: none;
-	margin: 0;
-	opacity: 0;
-	position: absolute;
-	top: 0;
-	.transition;
-	width: 100%;
-	z-index: 1;
-	li a,
-	li strong {
-		color: @body-color;
-		padding: 0 3px 3px;
-	}
-	li a {
-		display: block;
-		overflow: hidden;
-        text-overflow: ellipsis;
-		.transition;
-		white-space: nowrap;
-		&:hover {
-			background-color: @header-light;
-			color: #fff;
-		}
-	}
-	&:before {
-		border: 11px solid transparent; /* tip height + border width*/
-		border-bottom-color: #fff;
-		content:"\00a0";
-		display: block;
-		height: 0;
-		left: 50%;
-		margin-left: -11px;
-		position: absolute;
-		top: -22px; /* value = - border-top-width - border-bottom-width */
-		width: 0;
-	}
-}
+/* removed for now */
 
 /* -----------------------------------------
    Sign In Mobile
@@ -401,10 +398,6 @@ div.search-form {
    Tiles
 ----------------------------------------- */
 
-.post-list {
-	overflow: hidden;
-}
-
 .loading {
 	background: @header-light;
 	clear: both;
@@ -425,60 +418,72 @@ section h1 {
     margin: 0 0 @spacing-default;
 }
 
-article  {
-    margin: 0 0 @spacing-larger;
-	opacity: 1;
-    div.content {
-		.transition;
-        height: 120px;
-        overflow: hidden;
-	}
-	.info {
-		background: rgba(100, 100, 100, .5) url(../images/icons/info.png) no-repeat 50% 50%;
-		border-radius: 0 0 0 5px;
-		height: 30px;
-		position: absolute;
-		right: 15px;
-		top: 0;
-		width: 30px;
+.post-list {
+	overflow: hidden;
+
+	article  {
+		margin: 0 0 @spacing-larger;
+		opacity: 1;
+		
+		div.content {
+			.transition;
+			height: 120px;
+			overflow: hidden;
+		}
+	
+		h2 {
+			margin: 0;
+			
+			a {
+				display: block;
+				font-size: @medium-text;
+				height: 75px;
+				overflow: hidden;
+	
+				&:hover {
+					color: @font-color;
+					text-decoration: underline;
+				}
+			}
+		}
+		
+		p {
+			float: left;
+			width: 50%;
+			
+			&.genre {
+				display: none;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			&.author {
+				text-align: right;
+			}
+			
+			& a:hover {
+				color: @font-color;
+				text-decoration: underline;
+			}
+		}
+		
+		&:hover p.date.toggle {
+			display: none;
+		}
+		&:hover p.genre {
+			display: block;     
+		}
 	}
 }
 
-article {
-	h2 {
-		margin: 0;
-	}
-	h2 a {
-		display: block;
-		font-size: @medium-text;
-		height: 75px;
-		overflow: hidden;
-	}
-	a:hover {
-		color: @font-color;
-		text-decoration: underline;
-	}
-    p.author,
-    p.genre,
-    p.date {
-        float: left;
-        width: 50%;
-    }
-    p.genre {
-        display: none;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    p.author {
-        text-align: right;
-    }   
-    &:hover p.date.toggle {
-        display: none;
-    }
-    &:hover p.genre {
-        display: block;     
-    }
+.reveal-animation.ng-hide {
+	.transition('opacity', 1s);
+	/* The animation preparation code */
+	opacity: 0;
+}
+.reveal-animation.ng-show {
+	/* The animation code itself */
+	opacity: 1;
 }
 
 /* -----------------------------------------
@@ -508,7 +513,7 @@ article {
 	}
 	
 	.post-content {
-		margin-bottom: @spacing-default;
+		margin-bottom: @spacing-larger;
 		
 		p:last-of-type {
 			margin-bottom: 0;
@@ -517,7 +522,7 @@ article {
 	
 	/* hash tags */
 	.hash-tags {
-		margin-bottom: @spacing-default;
+		margin-bottom: @spacing-larger;
 		overflow: hidden;
 		
 		ul {
@@ -712,18 +717,18 @@ article {
 ----------------------------------------- */
 
 .Playlist {
-	.player-wrapper {
-		height: 420px;
-	}
+	
 	.video-list {
-		a {
+		span {
 			display: block;
 			padding: 4px 2px;
 			.transition;
+			
 			&.current {
 				background: @header-color;
 				color: @font-color;
 			}
+			
 			&:hover {
 				background-color: @header-light;
 				color: @font-color;

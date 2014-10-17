@@ -2,15 +2,13 @@
 
 class Share_Controller extends Controller {
 
-	private $js_folder;
+	private $theme_folder;
 	private $per_page;
 	private $post;
 
 	private  static $allowed_actions = array (
 		'about',
-		'bygenre',
 		'comment',
-		'getpost',
 		'getPostInfo',
 		'edit',
 		'like',
@@ -30,16 +28,16 @@ class Share_Controller extends Controller {
 	public function init() {
 		parent::init();
 		
-		$theme_folder = 'themes/' . SSViewer::current_theme() . '/'; // $this->ThemeDir()
+		$this->theme_folder = 'themes/' . SSViewer::current_theme() . '/'; // $this->ThemeDir()
 
-		Requirements::set_combined_files_folder($theme_folder . '_combinedfiles');
+		Requirements::set_combined_files_folder($this->theme_folder . '_combinedfiles');
 		
 		// include CSS
-		$css_folder = $theme_folder . 'css/';
+		$css_folder = $this->theme_folder . 'css/';
 		
 		$css_array = array(
-			$theme_folder . 'bower/foundation/css/normalize.css',
-			$theme_folder . 'bower/foundation/css/foundation.css'
+			$this->theme_folder . 'bower/foundation/css/normalize.css',
+			$this->theme_folder . 'bower/foundation/css/foundation.css'
 		);
 		
 		if (Director::isLive()) {
@@ -54,24 +52,23 @@ class Share_Controller extends Controller {
 		}
 		
 		// include JS
-		$this->js_folder = $theme_folder . 'javascript/';
+		$js_folder = $this->theme_folder . 'javascript/';
 		
 		$js_array = array(
-			$theme_folder . 'bower/jquery/dist/jquery.min.js',
-			$theme_folder . 'bower/angular/angular.min.js',
-			$theme_folder . 'bower/angular-route/angular-route.min.js',
-			$theme_folder . 'bower/angular-touch/angular-touch.min.js',
-			$theme_folder . 'bower/angular-cookies/angular-cookies.min.js',
-			$theme_folder . 'bower/angular-animate/angular-animate.min.js',
-			$theme_folder . 'bower/ng-infinite-scroller-origin/build/ng-infinite-scroll.min.js',
-			$theme_folder . 'bower/angucomplete/angucomplete.js',
-			$theme_folder . 'bower/foundation/js/foundation.min.js',
-			$this->js_folder . 'app.js',
-			$this->js_folder . 'controllers.js',
-			$this->js_folder . 'autocomplete.js',
-			$this->js_folder . 'playlist.js',
-			$this->js_folder . 'init.js',
-			$this->js_folder . 'soundcloud.js'
+			$this->theme_folder . 'bower/jquery/dist/jquery.min.js',
+			$this->theme_folder . 'bower/angular/angular.min.js',
+			$this->theme_folder . 'bower/angular-route/angular-route.min.js',
+			$this->theme_folder . 'bower/angular-touch/angular-touch.min.js',
+			$this->theme_folder . 'bower/angular-cookies/angular-cookies.min.js',
+			$this->theme_folder . 'bower/angular-animate/angular-animate.min.js',
+			$this->theme_folder . 'bower/ng-infinite-scroller-origin/build/ng-infinite-scroll.min.js',
+			$this->theme_folder . 'bower/foundation/js/foundation.min.js',
+			$js_folder . 'app.js',
+			$js_folder . 'controllers.js',
+			$js_folder . 'autocomplete.js',
+			$js_folder . 'playlist.js',
+			$js_folder . 'init.js',
+			$js_folder . 'soundcloud.js'
 		);
 		
 		// combine JS
@@ -88,15 +85,8 @@ class Share_Controller extends Controller {
 		}		
 	}
 	
-	public function index() {	
-		$posts = Post::get()->sort('Created', 'DESC');
-		
-		$list = new PaginatedList($posts, $this->request);
-		$list->setPageLength(POSTS_PER_PAGE);
-		
-		return $this->renderWith(array('Share', 'Page'), array(
-			'Posts' => $list
-		));
+	public function index() {
+		return $this->renderWith(array('Share', 'Page'));
 	}
 	
 	public function about() {
@@ -111,22 +101,6 @@ class Share_Controller extends Controller {
 		}
 		
 		return $this->renderWith(array('About'), $data);
-	}
-	
-	public function bygenre() {
-		$params = $this->getURLParams();
-		$genre_id = (int)$params['ID'];
-		
-		$genre = Genre::get()->filter('ID', $genre_id)->First();
-		
-		if ( ! $genre || ! $genre_id) $this->redirect('/');
-		
-		$posts = Post::get()->filter('GenreID', $genre_id)->sort('Created', 'DESC');
-		
-		return $this->renderWith(array('Share', 'Page'), array(
-			'Posts' => $posts,
-			'Genre' => $genre->Title
-		));
 	}
 	
 	public function comment() {
@@ -160,10 +134,6 @@ class Share_Controller extends Controller {
 		$response->output();
 	}
 	
-	public function CurrentURL() {
-		return $this->request->getURL();
-	}
-	
 	public function edit() {
 		$params = $this->getURLParams();
 		$id = (int)$params['ID'];
@@ -191,22 +161,6 @@ class Share_Controller extends Controller {
 	
 	public function getMember() {
 		return MyMember::get()->filter('HideInList', 0)->sort('Created DESC');
-	}
-	
-	public function getPost() {
-		$params = $this->getURLParams();
-		$id = (int)$params['ID'];
-		
-		$this->post = Post::get()->filter('ID', $id)->First();
-		
-		if ($this->post) {
-			return $this->renderWith(array('Page', 'Post'), array(
-				'Post' => $this->post,
-				'SoundcloudClientID' => defined('SOUNDCLOUD_CLIENT_ID') ? SOUNDCLOUD_CLIENT_ID : false
-			));
-		} else {
-			$this->redirect('/');
-		}
 	}
 	
 	public function getPostInfo() {
@@ -240,16 +194,12 @@ class Share_Controller extends Controller {
 		$response->output();
 	}
 	
+	public function getToken() {
+				return SecurityToken::inst()->getValue();
+	}
+	
 	private function includeFormJS() {
-		$js_files = array(
-			'third-party/foundation/vendor/zepto.js',
-			'third-party/foundation/vendor/custom.modernizr.js',
-			'third-party/foundation/foundation.min.js',
-			'third-party/foundation/foundation/foundation.forms.js'
-		);
-		foreach ($js_files as $file) {
-			Requirements::javascript($this->js_folder . $file);
-		}
+    Requirements::javascript($this->theme_folder . 'bower/foundation/js/vendor/modernizr.js');
 
 		Requirements::customScript(<<<JS
 if( ! /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
@@ -274,7 +224,7 @@ JS
 	}
 	
 	public function login() {	
-		return $this->renderWith(array('Login'));
+		return $this->renderWith('Login');
 	}
 	
 	public function newpost() {
@@ -309,15 +259,15 @@ JS
 	}
 	
 	public function player() {
-		return $this->renderWith(array('player'));
+		return $this->renderWith('player');
 	}
 	
 	public function playlist() {
-		return $this->renderWith(array('playlist'));
+		return $this->renderWith('playlist');
 	}
 	
 	public function post() {
-		return $this->renderWith(array('Post'));
+		return $this->renderWith('Post');
 	}
 	
 	public function posts() {
@@ -362,7 +312,7 @@ JS
 	}
 	
 	public function search() {
-		return $this->renderWith(array('Posts')); 
+		return $this->renderWith('Posts'); 
 	}
 	
 	public function unlike() {

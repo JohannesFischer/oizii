@@ -1,21 +1,44 @@
+<div id="Main">{{ stuff }}
+
 <div class="row" ng-show="showIntro">
 	<div class="columns large-12">
 		<div class="panel callout radius">
 			<h2>oizii - share delicous music</h2>
+			<span class="toggle-filters" ng-click="toggleFilters()" ng-class="{open: hideFilters == false}">Filters</span>
+			<div class="filters" ng-hide="hideFilters">
+				<p>
+					<strong>Genre</strong>
+				</p>
+				<% loop Genres %>
+					<a href="/#/genre/$ID" class="button round small">$Title</a>
+				<% end_loop %>
+				<p>
+					<strong>User</strong>
+				</p>
+				<% loop Users %>
+					<a href="/#/user/$ID" class="button round small">$FirstName</a>
+				<% end_loop %>
+			</div>
 		</div>
 	</div>
 </div>
 
-<div class="row">
-	<div class="columns large-12">
-		<h3>{{ PageTitle }}</h3>
+<div class="row" ng-hide="!pageTitle">
+	<div class="columns large-12 text-center">
+		<div class="page-title">
+			<h3>{{ pageTitle }}</h3>
+		</div>
 	</div>
 </div>
 
-<section id="Posts" class="row post-list" infinite-scroll="loadMore()" infinite-scroll-disabled="infiniteBusy">
+<section id="Posts" class="row post-list" infinite-scroll="loadMore()" infinite-scroll-disabled="data.infiniteBusy">
+  
+  <p ng-show="data.posts.length == 0 && !data.loading">no results</p>
 	
-	<article class="columns large-4 medium-6 tile" ng-repeat="post in posts">
-		<div class="content" style="background-color:#{{ post.User.HEX }}">
+  <% include Error %>
+  
+	<article class="columns large-4 medium-6 tile" ng-repeat="post in data.posts">
+		<div class="content reveal-animation" style="background-color:#{{ post.User.HEX }}">
 			<div class="margin">
 				<h2>
 					<a href="/#/post/{{ post.ID }}">{{post.Title}}</a>
@@ -36,3 +59,4 @@
 	<% include Loading %>
 
 </section>
+</div>

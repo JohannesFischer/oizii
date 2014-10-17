@@ -1,4 +1,5 @@
 var shareApp = angular.module('shareApp', [
+	'ngAnimate',
 	'ngCookies',
 	'ngRoute',
 	'ngTouch',
@@ -14,51 +15,59 @@ shareApp.config(['$routeProvider',
 	function($routeProvider) {
 		$routeProvider.
 		when('/about', {
-	        templateUrl: 'share/about/',
-	        controller: 'About'
-	    }).
+      templateUrl: 'share/about/',
+      controller: 'About'
+    }).
 		when('/add', {
 	        templateUrl: 'share/newPost/',
 	        controller: 'NewPost'
 	    }).
 		when('/edit/:postId', {
-	        templateUrl: 'share/newpost/',
-	        controller: 'PostEdit'
-	    }).
+      templateUrl: 'share/newpost/',
+      controller: 'PostEdit'
+	  }).
 		when('/genre/:genreId', {
-	        templateUrl: 'share/posts/',
+	    templateUrl: 'share/posts/',
 			controller: 'PostListGenre'
 		}).
 		when('/likes/', {
-	        templateUrl: 'share/posts/',
+	    templateUrl: 'share/posts/',
 			controller: 'PostListLikes'
 		}).
 		when('/login', {
-	        templateUrl: 'share/login/',
+	    templateUrl: 'share/login/',
 			controller: 'Login'
 	    }).
-	    when('/post/:postId', {
-	        templateUrl: 'share/post/',
-			controller: 'PostDetails'
+		when('/playlist', {
+	    templateUrl: 'share/playlist/',
+			controller: 'Playlist'
+    }).
+    when('/post/:postId', {
+      templateUrl: 'share/post/',
+      controller: 'PostDetails'
 		}).
 		when('/posts', {
-	        templateUrl: 'share/posts/',
-	        controller: 'PostList'
+      templateUrl: 'share/posts/',
+      controller: 'PostList'
+    }).
+		when('/search/:searchString', {
+	        templateUrl: 'share/search/',
+	        controller: 'Search'
 	    }).
 		when('/share', {
 	        templateUrl: 'share/newpost/',
 	        controller: 'NewPost'
 	    }).
 		when('/tag/:tag', {
-	        templateUrl: 'share/posts/',
-	        controller: 'PostListTag'
-	    }).
+      templateUrl: 'share/posts/',
+      controller: 'PostListTag'
+    }).
 		when('/user/:userId', {
-	        templateUrl: 'share/posts/',
+	    templateUrl: 'share/posts/',
 			controller: 'PostListUser'
 		}).
 		otherwise({
-		    redirectTo: 'posts/'
+		  redirectTo: 'posts/'
 		});
 	}]
 );

@@ -36,6 +36,7 @@ h5,
 h6,
 p,
 a,
+span,
 li,
 label,
 a.button {
@@ -87,34 +88,63 @@ li {
 .alert-box p {
   margin: 0;
 }
+.callout span.toggle-filters {
+  color: #333;
+  cursor: pointer;
+  display: block;
+  font-weight: bold;
+  padding: 0 0 0 1.2rem;
+  position: relative;
+}
+.callout span.toggle-filters.open {
+  margin-bottom: 10px;
+}
+.callout span.toggle-filters:before {
+  border-color: transparent transparent transparent #666;
+  border-style: solid;
+  border-width: 0.5rem 0 0.5rem 0.5rem;
+  content: '';
+  display: block;
+  left: 0;
+  margin-top: -0.5rem;
+  position: absolute;
+  top: 50%;
+  width: 0;
+}
+.callout span.toggle-filters.open:before {
+  border-color: #666 transparent;
+  border-width: 0.5rem 0.5rem 0;
+  margin-top: -0.25rem;
+}
 header form {
   margin: 4px 0 0;
 }
-input[type=search] {
+input[type=search],
+input.autocomplete-input {
   border-radius: 4px;
   height: 1.97rem;
   margin: 0;
 }
 ::-webkit-input-placeholder {
-  color: #aaa;
+  color: #888;
 }
 ::-moz-placeholder {
-  color: #aaa;
+  color: #888;
 }
 :-ms-input-placeholder {
-  color: #aaa;
+  color: #888;
 }
 input:-moz-placeholder {
-  color: #aaa;
+  color: #888;
 }
 ::-webkit-textarea-placeholder {
-  color: #aaa;
+  color: #888;
 }
 :-ms-textarea-placeholder {
-  color: #aaa;
+  color: #888;
 }
 textarea:-moz-placeholder {
-  color: #aaa;
+  color: #888;
 }
 form label {
   color: #fff;
@@ -210,55 +240,6 @@ a.notifications {
   padding: 2px 10px;
   text-transform: lowercase;
 }
-div.search-form {
-  position: relative;
-}
-.autocomplete-list {
-  background: #fff;
-  box-shadow: 0 5px 5px rgba(0,0,0,0.5);
-  list-style: none;
-  margin: 0;
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  -webkit-transition: all .5s ease;
-  -moz-transition: all .5s ease;
-  -o-transition: all .5s ease;
-  transition: all .5s ease;
-  width: 100%;
-  z-index: 1;
-}
-.autocomplete-list li a,
-.autocomplete-list li strong {
-  color: #524C49;
-  padding: 0 3px 3px;
-}
-.autocomplete-list li a {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-transition: all .5s ease;
-  -moz-transition: all .5s ease;
-  -o-transition: all .5s ease;
-  transition: all .5s ease;
-  white-space: nowrap;
-}
-.autocomplete-list li a:hover {
-  background-color: #7ecbdd;
-  color: #fff;
-}
-.autocomplete-list:before {
-  border: 11px solid transparent;
-  border-bottom-color: #fff;
-  content: "\00a0";
-  display: block;
-  height: 0;
-  left: 50%;
-  margin-left: -11px;
-  position: absolute;
-  top: -22px;
-  width: 0;
-}
 .sign-in-mobile {
   margin-bottom: 10px;
 }
@@ -279,7 +260,7 @@ div.search-form {
   position: relative;
 }
 .page-title h3:after {
-  border-color: #7ecbdd transparent;
+  border-color: #56bbd2 transparent;
   border-style: solid;
   border-width: 0.5rem 0.5rem 0;
   bottom: -0.5rem;
@@ -289,9 +270,6 @@ div.search-form {
   margin-left: -0.25rem;
   position: absolute;
   width: 0;
-}
-.post-list {
-  overflow: hidden;
 }
 .loading {
   background: #7ecbdd;
@@ -310,11 +288,14 @@ div.search-form {
 section h1 {
   margin: 0 0 10px;
 }
-article {
+.post-list {
+  overflow: hidden;
+}
+.post-list article {
   margin: 0 0 20px;
   opacity: 1;
 }
-article div.content {
+.post-list article div.content {
   -webkit-transition: all .5s ease;
   -moz-transition: all .5s ease;
   -o-transition: all .5s ease;
@@ -322,48 +303,51 @@ article div.content {
   height: 120px;
   overflow: hidden;
 }
-article .info {
-  background: rgba(100,100,100,0.5) url(../images/icons/info.png) no-repeat 50% 50%;
-  border-radius: 0 0 0 5px;
-  height: 30px;
-  position: absolute;
-  right: 15px;
-  top: 0;
-  width: 30px;
-}
-article h2 {
+.post-list article h2 {
   margin: 0;
 }
-article h2 a {
+.post-list article h2 a {
   display: block;
   font-size: 24px;
   height: 75px;
   overflow: hidden;
 }
-article a:hover {
+.post-list article h2 a:hover {
   color: #fff;
   text-decoration: underline;
 }
-article p.author,
-article p.genre,
-article p.date {
+.post-list article p {
   float: left;
   width: 50%;
 }
-article p.genre {
+.post-list article p.genre {
   display: none;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-article p.author {
+.post-list article p.author {
   text-align: right;
 }
-article:hover p.date.toggle {
+.post-list article p a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+.post-list article:hover p.date.toggle {
   display: none;
 }
-article:hover p.genre {
+.post-list article:hover p.genre {
   display: block;
+}
+.reveal-animation.ng-hide {
+  -webkit-transition: 'opacity' 1s ease;
+  -moz-transition: 'opacity' 1s ease;
+  -o-transition: 'opacity' 1s ease;
+  transition: 'opacity' 1s ease;
+  opacity: 0;
+}
+.reveal-animation.ng-show {
+  opacity: 1;
 }
 .pagination-buttons .large-6 {
   margin-bottom: 10px;
@@ -380,13 +364,13 @@ article:hover p.genre {
   color: #fff;
 }
 .post .post-content {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .post .post-content p:last-of-type {
   margin-bottom: 0;
 }
 .post .hash-tags {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   overflow: hidden;
 }
 .post .hash-tags ul {
@@ -530,10 +514,7 @@ article:hover p.genre {
   height: 70px;
   width: 100%;
 }
-.Playlist .player-wrapper {
-  height: 420px;
-}
-.Playlist .video-list a {
+.Playlist .video-list span {
   display: block;
   padding: 4px 2px;
   -webkit-transition: all .5s ease;
@@ -541,11 +522,11 @@ article:hover p.genre {
   -o-transition: all .5s ease;
   transition: all .5s ease;
 }
-.Playlist .video-list a.current {
+.Playlist .video-list span.current {
   background: #56bbd2;
   color: #fff;
 }
-.Playlist .video-list a:hover {
+.Playlist .video-list span:hover {
   background-color: #7ecbdd;
   color: #fff;
 }

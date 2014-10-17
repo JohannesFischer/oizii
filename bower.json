@@ -28,7 +28,6 @@
     "angular-route": "~1.2.26",
     "angular-touch": "~1.2.26",
     "ng-infinite-scroller-origin": "~1.1.2",
-    "angucomplete": "*",
     "angular-cookies": "~1.2.26",
     "foundation": "~5.4.6"
   }

@@ -1,47 +1,8 @@
-$(document).ready(function  () {
-	
-	if (jQuery('.search-form form')[0]) {
-		jQuery('.search-form form').submit(function () {
-			var value = jQuery('input[type=search]',this).val();
-			if (value !== '') {
-				window.location.href = searchForm.attr('action') + value;
-			}
-			return false;
-		});
-		
-		// init autocomplete
-		AutoComplete.init(jQuery('div.search-form input[type=search]'), jQuery('div.autocomplete-holder'));
-	}
-	
+$(document).ready(function  () {	
 	// target blank
 	jQuery('a.new-window,a[rel=external]').each(function () {
 		$(this).click(function () {
 			window.open($(this).attr('href'));
-			return false;
-		});
-	});
-	
-	// like / unlike
-	jQuery('a.xhr').each(function () {
-		$(this).click(function () {
-			var a = $(this);
-			if ($(this).hasClass('disabled')) return false;
-			
-			$(this).addClass('disabled');
-			
-			$.ajax({
-				url: $(this).attr('href')
-			}).done(function () {
-				if (a.hasClass('like')) {
-					if (a.text() == 'Like') {
-						a.html('Unlike');
-					} else {
-						a.html('Like');
-					}
-				}
-				a.removeClass('disabled');
-			});
-			
 			return false;
 		});
 	});
@@ -53,72 +14,6 @@ $(document).ready(function  () {
 			return false;
 		});
 	});
-
-	// new comment
-	if (jQuery('#Comments')) {
-		jQuery('#Comments form').submit(function () {
-			jQuery.ajax({
-				data: $(this).serialize(),
-				dataType: 'json',
-				success: function (data) {
-					if (data.Comment) {
-						
-						if (jQuery('.no-comments')) jQuery('.no-comments').detach();
-						
-						jQuery('#Comments form input[type=text]').val('');
-						
-						var div = jQuery('<div/>').addClass('columns twelve');
-						
-						jQuery('<img/>', {
-							src: data.Comment.Image
-						}).appendTo(div);
-						
-						var p = jQuery('<p/>').appendTo(div);
-						jQuery('<a/>', {
-							href: '/share/user/' + data.Comment.Member,
-							text: data.Comment.Member
-						}).appendTo(p);
-						jQuery('<span/>', {
-							text: ' ' + data.Comment.Created
-						}).appendTo(p);
-						jQuery('<div/>', {
-							html: data.Comment.Content
-						}).appendTo(div);
-						jQuery('.comments').append(div);
-					} else {
-						alert('An error occured :(');
-					}
-				},
-				type: 'post',
-				url: jQuery(this).attr('action')
-			});
-			
-			return false;
-		});
-	}
-	
-	// new post
-	if (jQuery('#NewPost')) {
-		jQuery('#NewPost').submit(function () {
-			jQuery('#NewPost input[type=submit]').attr('disabled', 'disabled');
-			
-			$.ajax({
-				data: $(this).serialize(),
-				dataType: 'json',
-				success: function (data) {
-					if (data.success) {					
-						window.location = 'http://' + window.location.hostname + '/share/getpost/' + data.success.ID;
-					} else {
-						alert('An error occured :(');
-					}
-				},
-				type: 'post',
-				url: $(this).attr('action')
-			});
-			
-			return false;
-		});
-	};
 	
 	// user menue
 	jQuery('a.user-menue, a.mobile-menue').each(function () {
@@ -134,9 +29,6 @@ $(document).ready(function  () {
 			return false;
 		});
 	});
-	
-	// init foundation
-	//$(document).foundation();
 });
 
 var userMenue = {
@@ -161,5 +53,4 @@ var userMenue = {
 			jQuery('body').unbind('click');
 		});
 	}
-	
 };

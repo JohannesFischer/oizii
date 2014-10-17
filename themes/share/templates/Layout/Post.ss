@@ -1,4 +1,4 @@
-<% include Loading %>
+<div class="row"><% include Loading %></div>
 
 <section class="row post" ng-swipe-left="nextPost()" ng-hide="loading">
 	
@@ -13,19 +13,23 @@
 		
 		<section class="post-content" ng-bind-html="post.Content"></section>
 		
-		<section class="hash-tags">
-			<a href="/#/tag/{{ tag }}" ng-repeat="tag in post.HashTags">#{{ tag }}</a>
+		<section class="hash-tags" ng-hide="post.HashTags.length < 1">
+			<ul>
+				<li ng-repeat="tag in post.HashTags">
+					<a ng-href="/#/tag/{{ tag }}">{{ tag }}</a>
+				</li>
+			</ul>
 		</section>
 
-		<section class="alert-box radius alert text-center" ng-show="loadingError">
+		<section class="alert-box radius alert text-center" ng-if="loadingError">
 			<p>Error loading link</p>
 		</section>
 		
-		<div class="flex-video player widescreen" ng-class="{vimeo: post.VimeoID != null}" ng-hide="loadingError">
+		<div class="flex-video player widescreen" ng-class="{vimeo: post.VimeoID != null}" ng-if="!loadingError">
 			<iframe width="560" height="600" ng-src="{{ frameURL }}" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 		</div>
 
-		<p>{{ post.Likes }} Likes</p>		
+		<p ng-mouseover="getLikes()" title="{{ likeUsers }}">{{ post.Likes }} Likes</p>
 		
 		<a href="<% if not CurrentMember %>/#/login<% end_if %>" class="button like"<% if CurrentMember %> ng-click="sendLike()"<% end_if %> ng-hide="post.HasLiked">Like</a>
 		
@@ -89,7 +93,7 @@
 				</ul>
 			</div>
 			<div class="columns large-12 medium-12 small-6">
-				<h4><%t Title.MoreFromUser "More posts of" %> {{ post.User.Name }}</h4>
+				<h4><%t Title.MoreFromUser "More posts by" %> {{ post.User.Name }}</h4>
 				<ul ng-repeat="post in postsUser">
 					<li>
 						<a href="/#/post/{{ post.ID }}">{{ post.Title }}</a>

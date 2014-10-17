@@ -295,6 +295,7 @@ class Data_Controller extends Controller {
 		$limit = isset($get_data['limit']) ? (int)$get_data['limit'] : false;
 		$member_id = isset($get_data['userId']) ? (int)$get_data['userId'] : false;
 		$random = isset($get_data['random']) ? (bool)$get_data['random'] : false;
+    $search = isset($get_data['search']) ? Convert::raw2sql($get_data['search']) : false;
 		$start = isset($get_data['start']) ? (int)$get_data['start'] : 0;
 		$tag = isset($get_data['tag']) ? Convert::raw2sql($get_data['tag']) : false;
 		$youtube = isset($get_data['youtube']) ? (bool)$get_data['youtube'] : false;
@@ -328,6 +329,11 @@ class Data_Controller extends Controller {
 			$sqlQuery->addWhere('Post.ID != ' . $exclude_id);
 		}
 		
+    // search post title
+		if ($search) {
+			$sqlQuery->addWhere("Post.Title LIKE '%{$search}%'");
+		}
+    
 		// filter | Tag
 		if ($tag) {
 			$sqlQuery->addInnerJoin('Post_HashTags', 'Post_HashTags.PostID = Post.ID');

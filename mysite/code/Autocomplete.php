@@ -12,22 +12,22 @@ class Autocomplete_Controller extends Controller {
 	
 	public function index() {
 		$search_term = Convert::raw2sql($this->request->getVar('search'));
-		
-		$genres = Genre::get()->filter(array(
-			'Title:PartialMatch' => $search_term
-		))->sort('Title');
+    
+    if ($search_term == '') return false;
+    
+		//$genres = Genre::get()->filter(array(
+		//	'Title:PartialMatch' => $search_term
+		//))->sort('Title');
 		
 		$posts = Post::get()->filter(array(
 			'Title:PartialMatch' => $search_term
 		))->sort('Title');
 		
-		$body = array(
-			'genres' => array(),
-			'posts' => array()
-		);
+		//$results = array_merge($this->populateBodyArray($genres), $this->populateBodyArray($posts));
 		
-		$body['Genre'] = $this->populateBodyArray($genres);
-		$body['Posts'] = $this->populateBodyArray($posts);
+		$body = array(
+			'Results' =>  $this->populateBodyArray($posts)
+		);
 		
 		$response = new SS_HTTPResponse(); 
 		$response->addHeader("Content-type", "application/json");

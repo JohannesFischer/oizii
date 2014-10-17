@@ -17,7 +17,7 @@ var YouTubePlayer = {
 			});
 		}
 		
-		this.highlightCurrent();
+		//this.highlightCurrent();
 		this.attach();
 	},
 	
