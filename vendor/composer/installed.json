@@ -1,24 +1,27 @@
 [
     {
         "name": "silverstripe/framework",
-        "version": "3.1.3",
-        "version_normalized": "3.1.3.0",
+        "version": "3.1.6",
+        "version_normalized": "3.1.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/silverstripe/silverstripe-framework.git",
-            "reference": "ead3e263786e85ef00ffa76d8d740a62526c5414"
+            "reference": "9da3357e3a7348914a4778366efa053277097cc4"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/silverstripe/silverstripe-framework/zipball/ead3e263786e85ef00ffa76d8d740a62526c5414",
-            "reference": "ead3e263786e85ef00ffa76d8d740a62526c5414",
+            "url": "https://api.github.com/repos/silverstripe/silverstripe-framework/zipball/9da3357e3a7348914a4778366efa053277097cc4",
+            "reference": "9da3357e3a7348914a4778366efa053277097cc4",
             "shasum": ""
         },
         "require": {
             "composer/installers": "*",
             "php": ">=5.3.2"
         },
-        "time": "2014-03-02 19:54:18",
+        "require-dev": {
+            "phpunit/phpunit": "~3.7@stable"
+        },
+        "time": "2014-08-24 23:25:01",
         "type": "silverstripe-module",
         "installation-source": "dist",
         "autoload": {
@@ -54,22 +57,23 @@
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "c74a930ef0cb2e36c9f0c119eb920b82513c2e46"
+            "reference": "09e2192a7cd08008e273355fddd38942d8de2992"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/c74a930ef0cb2e36c9f0c119eb920b82513c2e46",
-            "reference": "c74a930ef0cb2e36c9f0c119eb920b82513c2e46",
+            "url": "https://api.github.com/repos/composer/installers/zipball/09e2192a7cd08008e273355fddd38942d8de2992",
+            "reference": "09e2192a7cd08008e273355fddd38942d8de2992",
             "shasum": ""
         },
         "replace": {
+            "roundcube/plugin-installer": "*",
             "shama/baton": "*"
         },
         "require-dev": {
             "composer/composer": "1.0.*@dev",
-            "phpunit/phpunit": "3.7.*"
+            "phpunit/phpunit": "4.1.*"
         },
-        "time": "2014-03-21 15:33:48",
+        "time": "2014-10-15 03:40:33",
         "type": "composer-installer",
         "extra": {
             "class": "Composer\\Installers\\Installer",
@@ -91,27 +95,31 @@
             {
                 "name": "Kyle Robinson Young",
                 "email": "kyle@dontkry.com",
-                "homepage": "https://github.com/shama",
-                "role": "Developer"
+                "homepage": "https://github.com/shama"
             }
         ],
         "description": "A multi-framework Composer library installer",
         "homepage": "http://composer.github.com/installers/",
         "keywords": [
             "Craft",
+            "Dolibarr",
             "Hurad",
             "MODX Evo",
             "OXID",
+            "Thelia",
             "WolfCMS",
             "agl",
             "annotatecms",
+            "bitrix",
             "cakephp",
+            "chef",
             "codeigniter",
             "concrete5",
             "croogo",
             "drupal",
             "elgg",
             "fuelphp",
+            "grav",
             "installer",
             "joomla",
             "kohana",
@@ -121,9 +129,12 @@
             "mako",
             "mediawiki",
             "modulework",
+            "moodle",
             "phpbb",
             "piwik",
             "ppi",
+            "puppet",
+            "roundcube",
             "shopware",
             "silverstripe",
             "symfony",
