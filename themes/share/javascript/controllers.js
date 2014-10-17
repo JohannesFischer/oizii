@@ -220,7 +220,6 @@ shareApp.controller('PostListGenre', ['$scope', '$routeParams', 'postService', '
 		};
     
     $scope.title = postService.getValue('posts[0].Genre.Title');
-    console.log($scope.title);
 	}
 ]);
 
@@ -358,6 +357,8 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 		$scope.likeUsers = null;
 		$scope.loading = true;
 		$scope.commentFrombusy = false;
+    // todo test if that stuff works
+    window.scrollTo(0, 0);
 		
 		$http.get('data/getPost/' + $routeParams.postId).success(function(data) {
 			$scope.loading = false;

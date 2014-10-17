@@ -2,7 +2,7 @@
 
 <div class="row" ng-show="showIntro">
 	<div class="columns large-12">
-		<div class="panel callout radius">
+		<div class="panel callout">
 			<h2>oizii - share delicous music</h2>
 			<span class="toggle-filters" ng-click="toggleFilters()" ng-class="{open: hideFilters == false}">Filters</span>
 			<div class="filters" ng-hide="hideFilters">

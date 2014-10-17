@@ -6,5 +6,7 @@
  * notifications (likes / comments on posts)
  * frontend profile page
  * clean up project folder
- * prompt when canceling edit of a changed post
  * sign up with facebook
+ * mobile optimization
+ * fix SoundCloud Widget
+ * make bandcamp frame "responsive"

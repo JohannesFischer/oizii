@@ -25,11 +25,11 @@
 			<p>Error loading link</p>
 		</section>
 		
-		<div class="flex-video player widescreen" ng-class="{vimeo: post.VimeoID != null}" ng-if="!loadingError">
+		<div class="flex-video player widescreen" ng-class="{vimeo: post.VimeoID != null, bandcamp: post.BandcampAlbumID != null}" ng-if="!loadingError">
 			<iframe width="560" height="600" ng-src="{{ frameURL }}" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 		</div>
 
-		<p ng-mouseover="getLikes()" title="{{ likeUsers }}">{{ post.Likes }} Likes</p>
+		<p ng-mouseover="getLikes()" title="{{ likeUsers }}" ng-hide="post.Likes < 1">{{ post.Likes }} like<span ng-hide="post.Likes == 1">s</span></p>
 		
 		<a href="<% if not CurrentMember %>/#/login<% end_if %>" class="button like"<% if CurrentMember %> ng-click="sendLike()"<% end_if %> ng-hide="post.HasLiked">Like</a>
 		

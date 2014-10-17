@@ -63,7 +63,7 @@
 ----------------------------------------- */
 
 body {
-    background-color: @body-color;
+  background-color: @body-color;
 	color: @font-color;
 }
 
@@ -114,8 +114,8 @@ a,
 span,
 li,
 label,
-a.button {
-    font-family: "Ubuntu Light";
+.button {
+  font-family: "Ubuntu Light";
 	font-weight: normal;
 }
 em {
@@ -369,7 +369,7 @@ a.notifications {
 ----------------------------------------- */
 
 .page-title {
-	margin: 1rem 0 2rem;
+	margin: 1rem 0 2rem -10px;
 	
 	h3 {
 		background: @header-color;
@@ -591,6 +591,10 @@ section h1 {
 	.player {
 		background: @header-light url(../images/loader.gif) no-repeat 50% 50%;
 	}
+  
+  .bandcamp {
+    background: transparent;
+  }
 	
 	iframe {
 		display: block;
@@ -814,31 +818,37 @@ aside {
 		margin-bottom: @spacing-default;
 	}
 	
-	article {
-		margin-bottom: @spacing-default;
-		
-		div.content {
-			height: auto;
-			min-height: 1px;
-			
-			h2 {
-				margin: 0 0 10px;
-				
-				a {
-					font-size: @medium-text-mobile;
-					height: auto;
-				}
-			}
-			
-			p {
-				margin: 0 0 5px;
-			}
-		}
-	}
+  .post-list {
+  
+    article {
+      height: 120px;
+      margin-bottom: @spacing-default;
+      
+      div.content {
+        
+        h2 {
+          margin: 0 0 10px;
+          
+          a {
+            font-size: @medium-text-mobile;
+            height: auto;
+          }
+        }
+        
+        p {
+          margin: 0 0 5px;
+        }
+      }
+    }
+  }
 	
-	.button.right {
-		float: none;
-	}
+  .button {
+    width: 100%;
+    
+    &.right {
+      float: none;
+    } 
+  }
 	
 	.mobile-menue,
 	.sign-in {
@@ -859,6 +869,7 @@ aside {
 	}
 
 	.dropdown-holder {
+    
 		.dropdown {
 			background: @header-dark;
 			position: static;
@@ -870,4 +881,21 @@ aside {
 			}
 		}
 	}
+}
+
+// smartphone (xxx px)
+@media only screen and (max-width: 40em) {
+  
+  .post-list {
+    
+    article {
+      margin-bottom: @spacing-close;
+    
+      &,
+      & div.content {
+        height: auto;
+      }
+    }
+  }
+  
 }

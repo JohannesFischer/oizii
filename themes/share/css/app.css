@@ -39,7 +39,7 @@ a,
 span,
 li,
 label,
-a.button {
+.button {
   font-family: "Ubuntu Light";
   font-weight: normal;
 }
@@ -250,7 +250,7 @@ a.notifications {
   text-align: center;
 }
 .page-title {
-  margin: 1rem 0 2rem;
+  margin: 1rem 0 2rem -10px;
 }
 .page-title h3 {
   background: #56bbd2;
@@ -430,6 +430,9 @@ section h1 {
 .post .player {
   background: #7ecbdd url(../images/loader.gif) no-repeat 50% 50%;
 }
+.post .bandcamp {
+  background: transparent;
+}
 .post iframe {
   display: block;
   margin: 0 0 10px;
@@ -588,22 +591,22 @@ aside ul a:hover {
     font-size: 22px;
     margin-bottom: 10px;
   }
-  article {
+  .post-list article {
+    height: 120px;
     margin-bottom: 10px;
   }
-  article div.content {
-    height: auto;
-    min-height: 1px;
-  }
-  article div.content h2 {
+  .post-list article div.content h2 {
     margin: 0 0 10px;
   }
-  article div.content h2 a {
+  .post-list article div.content h2 a {
     font-size: 22px;
     height: auto;
   }
-  article div.content p {
+  .post-list article div.content p {
     margin: 0 0 5px;
+  }
+  .button {
+    width: 100%;
   }
   .button.right {
     float: none;
@@ -633,5 +636,14 @@ aside ul a:hover {
   .dropdown-holder .dropdown a {
     font-size: 1em;
     text-align: center;
+  }
+}
+@media only screen and (max-width: 40em) {
+  .post-list article {
+    margin-bottom: 5px;
+  }
+  .post-list article,
+  .post-list article div.content {
+    height: auto;
   }
 }
