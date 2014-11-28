@@ -30,9 +30,10 @@ shareApp.factory('postFactory', ['$http', '$location', '$q', '$log', function ($
 			}
 			return false;
 		},
-		getPost: function(parameter) {
-			parameter = parameter !== undefined ? '?' + parameter : '';
-			return $http.get('data/getPost' + parameter);
+		getPost: function(id) {
+			$http.get('data/getPost/' + id).success(function (data) {
+        return data;
+      });
 		},
 		getPosts: function(parameter) {
       var deferred = $q.defer();
@@ -180,6 +181,7 @@ shareApp.controller('Login', function ($scope, $http, $cookies, pageFactory) {
 					url = '#' + $cookies.lastVisited
 				}
 				window.location.href = url;
+        $route.reload();
 			}
 		});
 	};
@@ -227,6 +229,8 @@ shareApp.controller('PostListGenre', ['$scope', '$routeParams', 'postService', '
 shareApp.controller('PostListTag', ['$scope', '$routeParams', 'postService', 'pageFactory',
 	function ($scope, $routeParams, postService, pageFactory) {
 		$scope.data = postService.data;
+    $scope.showPlaytag = true;
+    $scope.tag = $routeParams.tag;
     postService.clear();
 		
     pageFactory.resetTitle();
@@ -255,28 +259,17 @@ shareApp.controller('PostListUser', ['$scope', '$routeParams', 'postService', 'p
 ]);
 
 // PostList User Likes
-shareApp.controller('PostListLikes', ['$scope', 'postFactory', 'postsPerPage', 'pageFactory',
-	function ($scope, postFactory, postsPerPage, pageFactory) {
-		var start = 0;
-		$scope.infiniteBusy = false;
-		$scope.posts = [];
-		$scope.pageTitle = 'Your Likes';
+shareApp.controller('PostListLikes', ['$scope', 'postService', 'pageFactory',
+  function ($scope, postService, pageFactory) {
+    $scope.data = postService.data;
+    postService.clear();
+    
+    $scope.pageTitle = 'Your Likes';
 		pageFactory.setTitle('Your Likes');
-		
-		$scope.loadMore = function() {
-			$scope.infiniteBusy = true;
-			
-			postFactory.getPosts('likes=1&limit=' + postsPerPage + '&start=' + start).success(function (data) {
-				for (var i = 0; i < data.length; i++) {
-					$scope.posts.push(data[i]);
-				}
-				$scope.loading = false;
-				$scope.infiniteBusy = false;
-				start += data.length;
-			}).error(function () {
-				// handle error
-			});
-		};
+    
+		$scope.loadMore = function () {
+      postService.getPosts('likes=1');
+    };
 	}
 ]);
 
@@ -468,7 +461,7 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 					$scope.post.Likes = data.Likes;
 				});
 			};
-			
+      
 			// touch / swipe functions
 			
 			$scope.nextPost = function () {
@@ -479,51 +472,66 @@ shareApp.controller('PostDetails', ['soundcloudClientId', '$scope', '$routeParam
 ]);
 
 // Playlist
-shareApp.controller('Playlist', function ($scope, $http, $document, $window, postFactory, constructor) {
-	var currentVideoID;
+shareApp.controller('Playlist', ['$scope', '$http', '$routeParams', '$document', '$window', 'postFactory', 'pageFactory',
+	function ($scope, $http, $routeParams, $document, $window, postFactory, pageFactory) {
+  $scope.currentIndex = 0;
 	$scope.loading = true;
+  $scope.noposts = false;
+  $scope.post = {};
 	$scope.posts = [];
-	
-	postFactory.getPosts('likes=1&youtube=1').success(function(data) {
-		$scope.loading = false;
-		
-		for (var i = 0; i < data.length; i++) {
-			$scope.posts.push(data[i]);
-		}
-		
-		$scope.loading = false;
-		
-		$scope.currentVideoID = data[0].YouTubeID;
-	});
-	
+  $scope.tag = $routeParams.tag;
+  
 	var tag = $document[0].createElement('script');
 	tag.src = "https://www.youtube.com/iframe_api";
 	var firstScriptTag = $document[0].getElementsByTagName( 'script' )[0];
 	firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
 	
-	$window.onYouTubePlayerAPIReady = function() {
-		
-		console.log('onYouTubePlayerAPIReady');
-		
-		var player = new YT.Player( 'Player', {
-			height: '390',
-			width: '100%',
-			//videoId: $scope.currentVideoID,
-			//playerVars: vars,
-			events: {
-				'onReady': function(event) {
-					event.target.playVideo();
-				},
-				'onStateChange': function(event) {
-					if (event.target.getPlayerState() === 0) {
-						console.log('next');
-					}
-				}
-			},
-			title: 'sup'
-		});
-	};
-});
+  $window.onYouTubePlayerAPIReady = function() {
+    $window.player = new YT.Player('Player', {
+      height: '390',
+      width: '100%',
+      //videoId: $scope.posts[$scope.currentIndex].YouTubeID,
+      events: {
+        'onReady': function(event) {
+          $scope.getPosts();
+        },
+        'onStateChange': function(event) {
+          if (event.target.getPlayerState() === 0) {
+            var nextIndex = $scope.posts[($scope.currentIndex + 1)] != undefined ? ($scope.currentIndex + 1) : -1;
+            if (nextIndex > -1) {
+              $scope.play(nextIndex);
+            }
+          }
+        }
+      },
+      title: 'video'
+    });
+  };
+  
+  $scope.play = function (index) {
+    console.log(index);
+    $scope.currentIndex = index;
+    $scope.post = $scope.posts[index];
+    $window.player.loadVideoById($scope.posts[index].YouTubeID);
+  };
+  
+  // get posts
+  $scope.getPosts = function () {
+    postFactory.getPosts('?tag=' + $routeParams.tag + '&youtube=1').then(function(data) {
+      for (var i = 0; i < data.length; i++) {
+        $scope.posts.push(data[i]);
+      }
+      $scope.loading = false;
+      if (data.length > 0) {
+        //$scope.post = postFactory.getPost($scope.posts[0].ID);
+        $scope.post = $scope.posts[0];
+        $scope.play(0);
+      } else {
+        $scope.noposts = true;
+      }
+    });
+  }
+}]);
 
 // Search
 shareApp.controller('Search', ['$scope', '$routeParams', '$location', 'postService', 'pageFactory',

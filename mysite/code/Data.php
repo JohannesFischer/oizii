@@ -2,16 +2,16 @@
 
 class Data_Controller extends Controller {
 
-	private  static $allowed_actions = array (
-		'comment',
+	private static $allowed_actions = array (
+		'comment' => '->checkPermission',
 		'getGenreStats',
 		'getLikes',
 		'getPost',
 		'getPosts',
-		'like',
+		'like' => '->checkPermission',
 		'login',
 		'isLoggedIn',
-		'newPost'
+		'newPost' => '->checkPermission'
 	);
 	
 	//public function init() {
@@ -23,12 +23,21 @@ class Data_Controller extends Controller {
 	//		$response->output();
 	//	}
 	//}
+  
+  public function checkPermission () {
+    if (Member::currentUserID()) {
+      return true;
+    } else {
+      return $this->_forbidden();
+    }
+  }
 	
 	private function _error($code = 400, $message = 'Forbidden') {
 		$this->_jsonOut(array(
 			'Code' => $code,
 			'Content' => $message
 		));
+    exit;
 	}
 	
 	private function _forbidden() {
@@ -60,9 +69,7 @@ class Data_Controller extends Controller {
 		}
 	}
 	
-	public function comment() {		
-		if ( ! Member::currentUserID()) $this->_forbidden();
-		
+	public function comment() {
 		$data = json_decode(file_get_contents('php://input'), true);
 		$id = (int)$data['ID'];
 		$text = trim($data['Text']);
@@ -461,9 +468,7 @@ class Data_Controller extends Controller {
 		return $this->_jsonOut($body);
 	}
 	
-	public function newPost() {
-		if ( ! Member::currentUserID()) return $this->_forbidden();
-		
+	public function newPost() {		
 		// retrieve and validate data
 		$data = json_decode(file_get_contents('php://input'), true);
 		

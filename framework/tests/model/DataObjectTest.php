@@ -682,7 +682,24 @@ class DataObjectTest extends SapphireTest {
 		$fields = $testObj->searchableFields();
 		$this->assertEmpty($fields);
 	}
-	
+
+	public function testSummaryFieldsCustomLabels() {
+		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$summaryFields = $team->summaryFields();
+
+		$this->assertEquals(
+			'Custom Title',
+			$summaryFields['Title'],
+			'Custom title is preserved'
+		);
+
+		$this->assertEquals(
+			'Captain\'s shirt number',
+			$summaryFields['Captain.ShirtNumber'],
+			'Custom title on relation is preserved'
+		);
+	}
+
 	public function testDataObjectUpdate() {
 		/* update() calls can use the dot syntax to reference has_one relations and other methods that return
 		 * objects */
@@ -932,21 +949,40 @@ class DataObjectTest extends SapphireTest {
 	 * Tests that singular_name() generates sensible defaults.
 	 */
 	public function testSingularName() {
-		$assertions = array (
+		$assertions = array(
 			'DataObjectTest_Player'       => 'Data Object Test Player',
 			'DataObjectTest_Team'         => 'Data Object Test Team',
 			'DataObjectTest_Fixture'      => 'Data Object Test Fixture'
 		);
 		
 		foreach($assertions as $class => $expectedSingularName) {
-			$this->assertEquals (
+			$this->assertEquals(
 				$expectedSingularName,
 				singleton($class)->singular_name(),
 				"Assert that the singular_name for '$class' is correct."
 			);
 		}
 	}
-	
+
+	/**
+	 * Tests that plural_name() generates sensible defaults.
+	 */
+	public function testPluralName() {
+		$assertions = array(
+			'DataObjectTest_Player'       => 'Data Object Test Players',
+			'DataObjectTest_Team'         => 'Data Object Test Teams',
+			'DataObjectTest_Fixture'      => 'Data Object Test Fixtures'
+		);
+
+		foreach($assertions as $class => $expectedPluralName) {
+			$this->assertEquals(
+				$expectedPluralName,
+				singleton($class)->plural_name(),
+				"Assert that the plural_name for '$class' is correct."
+			);
+		}
+	}
+
 	public function testHasDatabaseField() {
 		$team = singleton('DataObjectTest_Team');
 		$subteam = singleton('DataObjectTest_SubTeam');
@@ -1263,6 +1299,7 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 	);
 
 	private static $summary_fields = array(
+		'Title' => 'Custom Title',
 		'Title.UpperCase' => 'Title',
 		'Captain.ShirtNumber' => 'Captain\'s shirt number',
 		'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team'

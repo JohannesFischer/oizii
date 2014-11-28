@@ -134,7 +134,6 @@ JS;
 	 * Get message from session
 	 */
 	protected function getMessageFromSession() {
-		parent::getMessageFromSession();
 		if(($member = Member::currentUser()) && !Session::get('MemberLoginForm.force_message')) {
 			$this->message = _t(
 				'Member.LOGGEDINAS',
@@ -143,6 +142,10 @@ JS;
 			);
 		}
 		Session::set('MemberLoginForm.force_message', false);
+
+		parent::getMessageFromSession();
+
+		return $this->message;
 	}
 
 
@@ -198,7 +201,10 @@ JS;
 				Session::set('BackURL', $backURL);
 			}
 			$cp = new ChangePasswordForm($this->controller, 'ChangePasswordForm');
-			$cp->sessionMessage('Your password has expired. Please choose a new one.', 'good');
+			$cp->sessionMessage(
+				_t('Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
+				'good'
+			);
 			return $this->controller->redirect('Security/changepassword');
 		}
 

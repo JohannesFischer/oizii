@@ -37,8 +37,8 @@ shareApp.config(['$routeProvider',
 		when('/login', {
 	    templateUrl: 'share/login/',
 			controller: 'Login'
-	    }).
-		when('/playlist', {
+	  }).
+    when('/playlist/tag/:tag', {
 	    templateUrl: 'share/playlist/',
 			controller: 'Playlist'
     }).

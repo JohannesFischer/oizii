@@ -517,19 +517,20 @@ section h1 {
   height: 70px;
   width: 100%;
 }
-.Playlist .video-list span {
+.Playlist .video-list li {
+  cursor: pointer;
   display: block;
-  padding: 4px 2px;
+  padding: 4px 4px 4px 8px;
   -webkit-transition: all .5s ease;
   -moz-transition: all .5s ease;
   -o-transition: all .5s ease;
   transition: all .5s ease;
 }
-.Playlist .video-list span.current {
+.Playlist .video-list li.current {
   background: #56bbd2;
   color: #fff;
 }
-.Playlist .video-list span:hover {
+.Playlist .video-list li:hover {
   background-color: #7ecbdd;
   color: #fff;
 }
