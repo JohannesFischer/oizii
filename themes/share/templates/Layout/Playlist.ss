@@ -1,10 +1,11 @@
 <div class="row">
   <div class="columns large-12">
-    <p class="alert-box" ng-show="noposts">No videos found!<br>The playlist player works with youtube videos only at the moment</p>
+    <!--<p class="loading" ng-show="loading">loading</p> -->
+    <p class="alert-box" ng-show="!loading && posts.length == 0">No videos found!<br>The playlist player works with youtube videos only at the moment</p>
   </div>
 </div>
 
-<section class="Playlist row"  ng-show="!noposts">
+<section class="Playlist row" ng-hide="!loading && posts.length == 0">
   
   <section class="columns medium-9">
     <h1>#{{ tag }} playlist</h1>
@@ -15,6 +16,12 @@
     </div>
     
     <h2>{{ post.Title }}</h2>
+    
+    <p>
+			<a href="/#/genre/{{ post.Genre.ID }}">{{ post.Genre.Title }}</a> &ndash;
+			<%t Content.PostedOn "posted on" %> {{ post.Created }} <%t Content.By "by" %> <a href="/#/user/{{ post.User.ID }}">{{ post.User.Name }}</a>
+		</p>
+    
     <!--
     <section class="post-content" ng-bind-html="post.Content"></section>		
     <section class="hash-tags" ng-hide="post.HashTags.length < 1">

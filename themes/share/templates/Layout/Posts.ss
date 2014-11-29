@@ -31,12 +31,11 @@
 	</div>
 </div>
 
-<!--
 <div class="row" ng-show="showPlaytag">
-	<div class="columns medium-offset-4 medium-4 text-center">
-		<a href="/#/playlist/tag/{{ tag }}" class="playlist-link">play all songs in playlist</a>
+	<div class="columns medium-offset-4 medium-4 text-center playlist-link">
+		<a href="/#/playlist/tag/{{ tag }}">play all songs in playlist</a>
 	</div>
-</div>-->
+</div>
 
 <section id="Posts" class="row post-list" infinite-scroll="loadMore()" infinite-scroll-disabled="data.infiniteBusy">
   

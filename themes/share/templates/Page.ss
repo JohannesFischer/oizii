@@ -13,23 +13,15 @@
 	<header>
 		
 		<div class="row">
-				<div class="column large-3 medium-3">
-						<h1><a href="/" title="oizii desu yo!">oizii</a></h1>
-				</div>
-				<div class="column large-6 medium-6 hide-on-mobile search-form">
-						<form ng-submit="search()" ng-controller="Search">
-							<input type="search" name="search" class="large-12" placeholder="search for title" ng-model="searchString">
-				<!--<angucomplete id="AutocompleteInput" placeholder="search for title or genre"
-						pause="400"
-						selectedobject="SearchResult"
-						url="/autocomplete?search="
-						datafield="Results"
-						titlefield="Title"
-						descriptionfield="ID"
-						inputclass="autocomplete-input"/>-->
-						</form>
-				</div>
-				<div class="column large-3 medium-3 hide-on-mobile">
+			<div class="column large-3 medium-3">
+					<h1><a href="/" title="oizii desu yo!">oizii</a></h1>
+			</div>
+			<div class="column large-6 medium-6 hide-on-mobile search-form">
+				<form ng-submit="search()" ng-controller="Search">
+					<input type="search" name="search" class="large-12" placeholder="search for title" ng-model="searchString">
+				</form>
+			</div>
+			<div class="column large-3 medium-3 hide-on-mobile">
 			<div class="menue">
 				<% if CurrentMember %>
 					<a href="#" class="user-menue">$CurrentMember.FirstName</a>
@@ -40,7 +32,7 @@
 					<a href="/#/login" class="sign-in"><%t Menu.SignIn "sign in" %></a>
 				<% end_if %>
 			</div>
-				</div>
+		</div>
 		
 		<!-- menue for mobile view -->
 		<% if CurrentMember %>
