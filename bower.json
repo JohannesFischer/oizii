@@ -29,6 +29,7 @@
     "angular-touch": "~1.2.26",
     "ng-infinite-scroller-origin": "~1.1.2",
     "angular-cookies": "~1.2.26",
-    "foundation": "~5.4.6"
+    "foundation": "~5.4.6",
+    "fontawesome": "~4.2.0"
   }
 }

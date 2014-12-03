@@ -4,7 +4,7 @@ class Post extends DataObject {
 
 	private static $default_sort = 'Created DESC';
 
-    private static $db = array(
+  private static $db = array(
 		'BandcampAlbumID' => 'Varchar(10)',
 		'BandcampTrack' => 'Varchar(2)',
 		'Content' => 'HTMLText',
@@ -14,7 +14,7 @@ class Post extends DataObject {
 		'Link' => 'Varchar(250)',
 		'VimeoID' => 'Varchar(20)',
 		'YouTubeID' => 'Varchar(20)'
-    );
+  );
 	
 	private static $has_one = array(
 		'Genre' => 'Genre',
@@ -49,15 +49,15 @@ class Post extends DataObject {
 	}
 	
 	public function canView($member = null) {
-		// enable DataFormatter requests
-		if ( ! $member) {
-			return true;
-		}
-		if (Permission::check('ADMIN') || $this->MemberID == Member::currentUserID())	{
-			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
-		}
-		return false;
+    // enable DataFormatter requests
+    if ( ! $member) {
+      return true;
     }
+    if (Permission::check('ADMIN') || $this->MemberID == Member::currentUserID())	{
+      return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+    }
+    return false;
+  }
 	
 	public function getCMSFields() {
 		$dropdown_values = Genre::get()->map('ID', 'Title');
@@ -162,10 +162,6 @@ class Post extends DataObject {
 			'PostID' => $this->ID
 		))->First();
 	}
-	
-	//public function onAfterWrite() {
-	//	parent::onAfterWrite();
-	//}
 	
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();

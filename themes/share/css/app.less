@@ -398,25 +398,23 @@ a.notifications {
    Tiles
 ----------------------------------------- */
 
-.loading {
-	background: @header-light;
-	clear: both;
-	font-size: 1em;
-	float: none;
-	height: 2em;
-	line-height: 2em;
-	margin-bottom: 1em;
-	opacity: 1;
-	overflow: hidden;
-}
-
+.loading,
 .playlist-link {
   background: @header-light;
 	font-size: 1em;
 	height: 2em;
 	line-height: 2em;
 	margin-bottom: 1em;
+}
+
+.loading {
+	clear: both;
+	float: none;
+	opacity: 1;
 	overflow: hidden;
+}
+
+.playlist-link {
   
   a {
     color: #fff;
@@ -428,7 +426,7 @@ a.notifications {
 }
 
 section h1 {
-    margin: 0 0 @spacing-default;
+  margin: 0 0 @spacing-default;
 }
 
 .post-list {
@@ -504,9 +502,11 @@ section h1 {
 ----------------------------------------- */
 
 .pagination-buttons {
-	.large-6 {
+	
+  .large-6 {
 		margin-bottom: @spacing-default;
 	}
+  
 	a {
 		margin: 0;
 	}

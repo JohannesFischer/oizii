@@ -271,23 +271,18 @@ a.notifications {
   position: absolute;
   width: 0;
 }
-.loading {
-  background: #7ecbdd;
-  clear: both;
-  font-size: 1em;
-  float: none;
-  height: 2em;
-  line-height: 2em;
-  margin-bottom: 1em;
-  opacity: 1;
-  overflow: hidden;
-}
+.loading,
 .playlist-link {
   background: #7ecbdd;
   font-size: 1em;
   height: 2em;
   line-height: 2em;
   margin-bottom: 1em;
+}
+.loading {
+  clear: both;
+  float: none;
+  opacity: 1;
   overflow: hidden;
 }
 .playlist-link a {

@@ -504,8 +504,6 @@ shareApp.controller('Playlist', ['$scope', '$http', '$routeParams', '$document',
     $scope.play(index);
   };
   
-  // get post details
-  
   
   // get posts
   $scope.getPosts = function () {
@@ -520,6 +518,14 @@ shareApp.controller('Playlist', ['$scope', '$http', '$routeParams', '$document',
     });
   };
   
+  // play next player event
+  $scope.playNext = function () {
+    var nextIndex = $scope.posts[($scope.currentIndex + 1)] != undefined ? $scope.currentIndex + 1 : -1;
+    if (nextIndex > -1) {
+      $scope.applyAndPlay(nextIndex);
+    }  
+  };
+  
   // load Youtube Player
   $window.onYouTubePlayerAPIReady = function() {
     $window.player = new YT.Player('Player', {
@@ -530,13 +536,14 @@ shareApp.controller('Playlist', ['$scope', '$http', '$routeParams', '$document',
         'onReady': function(event) {
             $scope.getPosts();
         },
-        'onStateChange': function(event) {
+        'onError': function (event) {
+          $scope.playNext();
+        },
+        'onStateChange': function (event) {
           // when finished
           if (event.target.getPlayerState() === 0) {
             var nextIndex = $scope.posts[($scope.currentIndex + 1)] != undefined ? $scope.currentIndex + 1 : -1;
-            if (nextIndex > -1) {
-              $scope.applyAndPlay(nextIndex);
-            }
+            $scope.playNext();
           }
         }
       },

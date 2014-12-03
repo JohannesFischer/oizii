@@ -32,7 +32,7 @@
 </div>
 
 <div class="row" ng-show="showPlaytag">
-	<div class="columns medium-offset-4 medium-4 text-center playlist-link">
+	<div class="columns medium-offset-4 medium-4 small-12 text-center playlist-link">
 		<a href="/#/playlist/tag/{{ tag }}">play all songs in playlist</a>
 	</div>
 </div>
