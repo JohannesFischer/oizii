@@ -11,42 +11,44 @@ shareApp.controller('About', function($scope, $http, pageFactory) {
 
 shareApp.controller('Login', function($scope, $http, $cookies, pageFactory) {
   $scope.error = false;
-  return $http.get('data/isLoggedIn').success(function(data) {
-    if (data.User !== void 0) {
-      window.location.href = '/';
+  $http({
+    url: 'data/isLoggedIn'
+  }).success(function(data) {
+    if (data.User != null) {
+      return window.location.href = '/';
     }
-    pageFactory.setTitle('Login');
-    return $scope.login = function() {
-      var mail, pass, postData;
-      $scope.error = false;
-      mail = angular.element(document.querySelector('#Email'));
-      pass = angular.element(document.querySelector('#Password'));
-      postData = {
-        email: mail.val(),
-        password: pass.val()
-      };
-      $http({
-        url: '/data/login/',
-        method: "POST",
-        data: postData,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).success(function(data) {
-        var url;
-        if (data.User === void 0) {
-          return $scope.error = true;
-        } else {
-          url = '/';
-          if ($cookies.lastVisited) {
-            url = '#' + $cookies.lastVisited;
-          }
-          return window.location.href = url;
-        }
-      });
-      return $route.reload();
-    };
   });
+  pageFactory.setTitle('Login');
+  return $scope.login = function() {
+    var mail, pass, postData;
+    $scope.error = false;
+    mail = angular.element(document.querySelector('#Email'));
+    pass = angular.element(document.querySelector('#Password'));
+    postData = {
+      email: mail.val(),
+      password: pass.val()
+    };
+    $http({
+      url: '/data/login/',
+      method: "POST",
+      data: postData,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).success(function(data) {
+      var url;
+      if (data.User != null) {
+        url = '/';
+        if ($cookies.lastVisited) {
+          url = '#' + $cookies.lastVisited;
+        }
+        return window.location.href = url;
+      } else {
+        return $scope.error = true;
+      }
+    });
+    return $route.reload();
+  };
 });
 
 shareApp.controller('PostList', function($scope, postService, pageFactory) {
@@ -127,7 +129,7 @@ shareApp.controller('PostEdit', function($scope, $http, $location, $routeParams,
   $scope.loading = true;
   $scope.master = {};
   $scope.post = {};
-  $http.get({
+  $http({
     url: "data/getPost/" + $routeParams.postId + "?edit=1"
   }).success(function(data) {
     $scope.loading = false;
@@ -332,7 +334,7 @@ shareApp.controller('Playlist', function($scope, $http, $routeParams, $document,
 shareApp.controller('Search', function($scope, $routeParams, $location, postService, pageFactory) {
   $scope.data = postService.data;
   pageFactory.resetTitle();
-  if ($routeParams.searchString !== void 0) {
+  if ($routeParams.searchString != null) {
     postService.clear();
     $scope.loadMore = function() {
       return postService.getPosts('search=' + $routeParams.searchString);

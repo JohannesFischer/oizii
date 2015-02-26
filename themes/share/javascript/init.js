@@ -4,13 +4,13 @@ $(function() {
   jQuery('a.new-window,a[rel=external]').each(function() {
     return $(this).on("click", function() {
       window.open($(this).attr('href'));
-      return false;
+      return defaultPrevented();
     });
   });
   jQuery('.post-content a').each(function() {
     return jQuery(this).on("click", function() {
       window.open($(this).attr('href'));
-      return false;
+      return defaultPrevented();
     });
   });
   return jQuery('a.user-menue, a.mobile-menue').each(function() {

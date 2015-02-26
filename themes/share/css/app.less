@@ -1,32 +1,30 @@
-/* -------------------------------------------------- 
-   Table of Contents
------------------------------------------------------
-:: LESS
-:: Shared Styles
-:: Typography
-:: Colors
-:: Forms
-:: Header
-:: Autocomplete
-:: Sign In Mobile
-:: Page Title
-:: Tiles
-:: Pagination
-:: Post
-:: Comments
-:: Content
-:: Playlist
-:: Sidebar
-:: Comments
-:: Charts
-:: Mobile Styles
-*/
+// --------------------------------------------------
+//   Table of Contents
+// -----------------------------------------------------
+// :: LESS
+// :: Shared Styles
+// :: Typography
+// :: Colors
+// :: Forms
+// :: Header
+// :: Autocomplete
+// :: Sign In Mobile
+// :: Page Title
+// :: Tiles
+// :: Post
+// :: Comments
+// :: Content
+// :: Playlist
+// :: Sidebar
+// :: Comments
+// :: Charts
+// :: Mobile Styles
 
-/* -----------------------------------------
-   LESS
------------------------------------------ */
+// -----------------------------------------
+//   LESS STUFF
+// -----------------------------------------
 
-/* Colors */
+// Colors
 @body-color: #524C49;
 @chart-base: #132D54;
 @header-color: #56bbd2;
@@ -37,7 +35,7 @@
 @tag-color: #008CBA;
 @tag-color-hover: #0078A0;
 
-/* Font Sizes */
+// Font Sizes
 @extra-large-text: 44px;
 @large-text: 36px;
 @medium-text: 24px;
@@ -45,62 +43,63 @@
 @regular-text: 17px;
 @regular-text-mobile: 14px;
 
-/* Spacing */
+// Spacing
 @spacing-close: 5px;
 @spacing-default: 10px;
 @spacing-larger: 20px;
 
 .transition (@property: all, @duration: .5s) {
-	-webkit-transition: @property @duration ease;
-	-moz-transition: @property @duration ease;
-	-o-transition: @property @duration ease;
-	transition: @property @duration ease;
+  -webkit-transition: @property @duration ease;
+  -moz-transition: @property @duration ease;
+  -o-transition: @property @duration ease;
+  transition: @property @duration ease;
 }
 
 
-/* -----------------------------------------
-   Shared Styles
------------------------------------------ */
+// -----------------------------------------
+//   Shared Styles
+// -----------------------------------------
 
 body {
   background-color: @body-color;
-	color: @font-color;
+  color: @font-color;
+  min-width: 320px;
 }
 
 .button {
-	border: 0;
-	box-shadow: none;
+  border: 0;
+  box-shadow: none;
 }
 
 .hidden {
-	height: 0;
-	opacity: 0;
-	overflow: hidden;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
 }
 
 .margin {
-    padding: @spacing-default;
+  padding: @spacing-default;
 }
 
 .none {
-	display: none;
+  display: none;
 }
 
 .mobile-only {
-	display: none;
+  display: none;
 }
 
-/* -----------------------------------------
-   Typography
------------------------------------------ */
+// -----------------------------------------
+//   Typography
+// -----------------------------------------
 
 @font-face { 
-	font-family: "Ubuntu Light"; 
-    src: url('../webfonts/Ubuntu-L.woff');
+  font-family: "Ubuntu Light";
+  src: url('../webfonts/Ubuntu-L.woff');
 }
 @font-face { 
-	font-family: "Ubuntu Light Italic"; 
-    src: url('../webfonts/Ubuntu-LI.woff');
+  font-family: "Ubuntu Light Italic";
+  src: url('../webfonts/Ubuntu-LI.woff');
 }
 
 h1,
@@ -116,19 +115,20 @@ li,
 label,
 .button {
   font-family: "Ubuntu Light";
-	font-weight: normal;
+  font-weight: normal;
 }
 em {
-	font-family: "Ubuntu Light Italic";
-	padding: 0 5px 0 0;
+  font-family: "Ubuntu Light Italic";
+  padding: 0 5px 0 0;
 }
 
 h1 {
+  font-size: @large-text;
+  font-weight: normal;
+
+  a {
     font-size: @large-text;
-    font-weight: normal;
-	a {
-		font-size: @large-text;
-	}
+  }
 }
 
 h2 {
@@ -172,40 +172,40 @@ li {
 }
 
 .callout span.toggle-filters {
-	color: #333;
-	cursor: pointer;
-	display: block;
-	font-weight: bold;
-	padding: 0 0 0 1.2rem;
-	position: relative;
-	
-	&.open {
-		margin-bottom: @spacing-default;
-	}
-	
-	&:before {
-		border-color: transparent transparent transparent #666;
-		border-style: solid;
-		border-width: 0.5rem 0 0.5rem 0.5rem;
-		content: '';
-		display: block;
-		left: 0;
-		margin-top: -0.5rem;
-		position: absolute;
-		top: 50%;
-		width: 0;
-	}
-	
-	&.open:before {
-		border-color: #666 transparent;
-		border-width: 0.5rem 0.5rem 0;
-		margin-top: -0.25rem;
-	}
+  color: #333;
+  cursor: pointer;
+  display: block;
+  font-weight: bold;
+  padding: 0 0 0 1.2rem;
+  position: relative;
+
+  &.open {
+    margin-bottom: @spacing-default;
+  }
+
+  &:before {
+    border-color: transparent transparent transparent #666;
+    border-style: solid;
+    border-width: 0.5rem 0 0.5rem 0.5rem;
+    content: '';
+    display: block;
+    left: 0;
+    margin-top: -0.5rem;
+    position: absolute;
+    top: 50%;
+    width: 0;
+  }
+
+  &.open:before {
+    border-color: #666 transparent;
+    border-width: 0.5rem 0.5rem 0;
+    margin-top: -0.25rem;
+  }
 }
 
-/* -----------------------------------------
-   Forms
------------------------------------------ */
+// -----------------------------------------
+//   Forms
+// -----------------------------------------
 
 header form {
   margin: 4px 0 0;
@@ -214,99 +214,83 @@ header form {
 input[type=search],
 input.autocomplete-input {
   border-radius: 4px;
-	height: 1.97rem;
-	margin: 0;
+  height: 1.97rem;
+  margin: 0;
 }
-::-webkit-input-placeholder { color: @font-color-placeholder; }
+
 ::-moz-placeholder { color: @font-color-placeholder; }
+
+::-webkit-input-placeholder { color: @font-color-placeholder; }
 :-ms-input-placeholder { color: @font-color-placeholder; }
 input:-moz-placeholder { color: @font-color-placeholder; }
+
 ::-webkit-textarea-placeholder { color: @font-color-placeholder; }
 :-ms-textarea-placeholder { color: @font-color-placeholder; }
 textarea:-moz-placeholder { color: @font-color-placeholder; }
 
 form label {
-	color: @font-color;
-	cursor: default;
-  
-	&.left {
-		float: none;
-	}
+  color: @font-color;
+  cursor: default;
+
+  &.left {
+    float: none;
+  }
 }
 
 form.custom a,
 form.custom li {
-	font-size: 1em;
+  font-size: 1em;
 }
 
 textarea {
-	height: 200px;
+  height: 200px;
 }
 
 input[type=submit] {
-    margin-bottom: @spacing-default;
+  margin-bottom: @spacing-default;
 }
 
 #Remember {
-	input {
-		float: left;
-		margin: 0 10px 0 0;
-	}
-	label.right {
-		float: none !important;
-		text-align: left;
-	}
+  input {
+    float: left;
+    margin: 0 10px 0 0;
+  }
+  label.right {
+    float: none !important;
+    text-align: left;
+  }
 }
 
 
-/* -----------------------------------------
-   Header
------------------------------------------ */
+// -----------------------------------------
+//   Header
+// -----------------------------------------
 
 header {
-	background-color: @header-color;
-	height: 40px;
-    margin: 0 0 @spacing-larger;
-    .row {
-        height: 40px;
-	}
-	h1 {
-	    //background: url(../images/icons/heart-white.png) 0 50% no-repeat;
-		height: 40px;
-		line-height: 35px;
-		margin: 0;
-	    //padding: 0 0 0 40px;
-	}
+  background-color: @header-color;
+  height: 40px;
+  margin: 0 0 @spacing-larger;
+
+  .row {
+    height: 40px;
+  }
+
+  h1 {
+    height: 40px;
+    line-height: 35px;
+    margin: 0;
+  }
 }
 
 .menue {
-	float: right;
-    height: 24px;
-    line-height: 24px;
-    margin: 8px 0 0;
-	a {
-		text-align: right;
-	}
-}    
+  float: right;
+  height: 24px;
+  line-height: 24px;
+  margin: 8px 0 0;
 
-a.notifications {
-    background: url(../images/icons/notifications-white.png) 50% 50% no-repeat;
-    color: #fff;
-    display: block;
-    float: left;
-    font-size: 14px;
-    font-weight: bold;
-    height: 24px;
-    line-height: 20px;
-    margin: 8px 10px 0 0;
-    text-align: center;
-    width: 24px;
-    }
-    .notifications.unread {
-        background-image: url(../images/icons/notifications-orange.png);
-    }
-
-.notification-count {	
+  a {
+    text-align: right;
+  }
 }
 
 .dropdown-holder {
@@ -343,30 +327,30 @@ a.notifications {
 	}
 }
 
-/* -----------------------------------------
-   Autocomplete
------------------------------------------ */
+// -----------------------------------------
+//   Autocomplete
+// -----------------------------------------
 
-/* removed for now */
+// removed for now
 
-/* -----------------------------------------
-   Sign In Mobile
------------------------------------------ */
+// -----------------------------------------
+//   Sign In Mobile
+// -----------------------------------------
 
 .sign-in-mobile {
-	margin-bottom: @spacing-default;
-	
-	a {
-		color: @font-color;
-		display: block;
-		font-size: @medium-text;
-		text-align: center;
-	}
+  margin-bottom: @spacing-default;
+
+  a {
+    color: @font-color;
+    display: block;
+    font-size: @medium-text;
+    text-align: center;
+  }
 }
 
-/* -----------------------------------------
-   Page Title
------------------------------------------ */
+// -----------------------------------------
+//   Page Title
+// -----------------------------------------
 
 .page-title {
 	margin: 1rem 0 2rem -10px;
@@ -394,9 +378,9 @@ a.notifications {
 	
 }
 
-/* -----------------------------------------
-   Tiles
------------------------------------------ */
+// -----------------------------------------
+//   Tiles
+// -----------------------------------------
 
 .loading,
 .playlist-link {
@@ -433,88 +417,76 @@ section h1 {
 	overflow: hidden;
 
 	article  {
-		margin: 0 0 @spacing-larger;
-		opacity: 1;
-		
-		div.content {
-			.transition;
-			height: 120px;
-			overflow: hidden;
-		}
-	
-		h2 {
-			margin: 0;
-			
-			a {
-				display: block;
-				font-size: @medium-text;
-				height: 75px;
-				overflow: hidden;
-	
-				&:hover {
-					color: @font-color;
-					text-decoration: underline;
-				}
-			}
-		}
-		
-		p {
-			float: left;
-			width: 50%;
-			
-			&.genre {
-				display: none;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-			}
-			&.author {
-				text-align: right;
-			}
-			
-			& a:hover {
-				color: @font-color;
-				text-decoration: underline;
-			}
-		}
-		
-		&:hover p.date.toggle {
-			display: none;
-		}
-		&:hover p.genre {
-			display: block;     
-		}
-	}
+      background-color: #777; // default-color
+      margin: 0 0 @spacing-larger;
+      opacity: 1;
+
+      div.content {
+        height: 120px;
+        overflow: hidden;
+        .transition;
+      }
+
+      h2 {
+        margin: 0;
+
+        a {
+          display: block;
+          font-size: @medium-text;
+          height: 75px;
+          overflow: hidden;
+
+          &:hover {
+            color: @font-color;
+            text-decoration: underline;
+          }
+        }
+      }
+
+      p {
+        float: left;
+        width: 50%;
+
+        &.genre {
+          display: none;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        &.author {
+          text-align: right;
+        }
+
+        & a:hover {
+          color: @font-color;
+          text-decoration: underline;
+        }
+      }
+
+      &:hover p.date.toggle {
+        display: none;
+      }
+
+      &:hover p.genre {
+        display: block;
+      }
+  }
 }
 
 .reveal-animation.ng-hide {
-	.transition('opacity', 1s);
-	/* The animation preparation code */
-	opacity: 0;
+  // The animation preparation code
+  opacity: 0;
+  .transition('opacity', 1s);
 }
 .reveal-animation.ng-show {
-	/* The animation code itself */
-	opacity: 1;
+  // The animation code itself
+  opacity: 1;
 }
 
-/* -----------------------------------------
-   Pagination
------------------------------------------ */
 
-.pagination-buttons {
-	
-  .large-6 {
-		margin-bottom: @spacing-default;
-	}
-  
-	a {
-		margin: 0;
-	}
-}
-
-/* -----------------------------------------
-   Post
------------------------------------------ */
+// -----------------------------------------
+//   Post
+// -----------------------------------------
 
 .post {
 	margin-bottom: @spacing-default;
@@ -533,7 +505,7 @@ section h1 {
 		}
 	}
 	
-	/* hash tags */
+	// hash tags
 	.hash-tags {
 		margin-bottom: @spacing-larger;
 		overflow: hidden;
@@ -601,49 +573,52 @@ section h1 {
 		}
 	}
 	
-	.player {
-		background: @header-light url(../images/loader.gif) no-repeat 50% 50%;
-	}
+  .player {
+    background: @header-light url(../images/loader.gif) no-repeat 50% 50%;
+  }
   
   .bandcamp {
     background: transparent;
   }
 	
-	iframe {
-		display: block;
-		margin: 0 0 @spacing-default;
-		max-width: 100%;
-		min-height: 166px;
-	}
-	
-	.button {
-		margin-bottom: @spacing-default;	
-	}
+  iframe {
+    display: block;
+    margin: 0 0 @spacing-default;
+    max-width: 100%;
+    min-height: 166px;
+  }
+
+  .button {
+    margin-bottom: @spacing-default;
+  }
 }
 
-/* -----------------------------------------
-   Comments
------------------------------------------ */
+// -----------------------------------------
+//   Comments
+// -----------------------------------------
 
 #Comments {
-	img {
-		float: left;
-		padding: 0 2% 2% 0;
-	}
-	p {
-		margin-bottom: @spacing-close;
-	}
-	.gravatar {
-		background-position: 0 50%;
-		background-repeat: no-repeat;
-		background-size: cover;
-		min-height: 2.3125rem;
-	}
+
+  img {
+    float: left;
+    padding: 0 2% 2% 0;
+  }
+
+  p {
+    margin-bottom: @spacing-close;
+  }
+
+  .gravatar {
+    background-position: 0 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 2.3125rem;
+  }
 }
 
-/* -----------------------------------------
-   Charts
------------------------------------------ */
+// -----------------------------------------
+//   Charts
+// -----------------------------------------
 
 .chart {
 	
@@ -658,8 +633,7 @@ section h1 {
 		
 	}
 	
-	/* legend */
-	
+	// legend
 	li {
 		list-style: none;
 	
@@ -672,40 +646,15 @@ section h1 {
 		}
 	}
 	
-	/* colors */
-	.color1 {
-		background-color: lighten(@chart-base, 5%);
-	}
-	.color2 {
-		background-color: lighten(@chart-base, 10%);
-	}
-	.color3 {
-		background-color: lighten(@chart-base, 15%);
-	}
-	.color4 {
-		background-color: lighten(@chart-base, 20%);
-	}
-	.color5 {
-		background-color: lighten(@chart-base, 25%);
-	}
-	.color6 {
-		background-color: lighten(@chart-base, 30%);
-	}
-	.color7 {
-		background-color: lighten(@chart-base, 35%);
-	}
-	.color8 {
-		background-color: lighten(@chart-base, 40%);
-	}
-	.color9 {
-		background-color: lighten(@chart-base, 50%);
-	}
-	.color10 {
-		background-color: lighten(@chart-base, 55%);
-	}
-	.color11 {
-		background-color: lighten(@chart-base, 60%);
-	}
+	// colors
+    .generate-colors(@n, @i: 1) when (@i =< @n) {
+      .color@{i} {
+        background-color: lighten(@chart-base, ((@i * 5) / 10));
+      }
+      .generate-colors(@n, (@i + 1));
+    }
+
+    .generate-colors(15);
 	
 }
 
@@ -715,17 +664,20 @@ section h1 {
 
 .member-list {
 	.row {
-		margin: 0 0 @spacing-default;
+      margin: 0 0 @spacing-default;
 	}
+
 	h4 {
-		margin: 0 0 @spacing-close;
+      margin: 0 0 @spacing-close;
 	}
+
 	p {
-		margin: 0;
+      margin: 0;
 	}
+
 	.user-color {
-		height: 70px;
-		width: 100%;
+      height: 70px;
+      width: 100%;
 	}	
 }
 
@@ -737,23 +689,24 @@ section h1 {
   margin-bottom: 1em;
 	
 	.video-list {
-		li {
-      cursor: pointer;
-			display: block;
-			padding: 4px 4px 4px 8px;
-			.transition;
-			
-			&.current {
-				background: @header-color;
-				color: @font-color;
-			}
-			
-			&:hover {
-				background-color: @header-light;
-				color: @font-color;
-			}
-		}
-	}
+
+      li {
+        cursor: pointer;
+        display: block;
+        padding: 4px 4px 4px 8px;
+        .transition;
+
+        &.current {
+          background: @header-color;
+          color: @font-color;
+        }
+
+        &:hover {
+          background-color: @header-light;
+          color: @font-color;
+        }
+    }
+  }
 }
 
 /* -----------------------------------------
@@ -761,76 +714,80 @@ section h1 {
 ----------------------------------------- */
 
 aside {
+
 	ul {
-		margin: 0;
-		li {
-			list-style: none;
-		}
-		a {
-			display: block;
-			padding: 4px 2px;
-			.transition;
-			&:hover {
-				background-color: @header-light;
-				color: @font-color;
-			}
-		}
-	}
+      margin: 0;
+
+      li {
+        list-style: none;
+      }
+
+      a {
+        display: block;
+        padding: 4px 2px;
+        .transition;
+
+        &:hover {
+          background-color: @header-light;
+          color: @font-color;
+        }
+      }
+  }
 }
 
 /* -----------------------------------------
    Mobile Styles
 ----------------------------------------- */
 
-/* Styles for screens that are smaller than 768px; */
+// Styles for screens that are smaller than 768px;
 @media only screen and (max-width: 48em) {
 	
 	.hide-on-mobile {
-		display: none;
+      display: none;
 	}	
 	.mobile-only {
-		display: block;
+      display: block;
 	}
 	
 	p,
 	a {
-		font-size: @regular-text-mobile;
+      font-size: @regular-text-mobile;
 	}
 	
 	header {
-		height: 50px;
-		margin: 0 0 @spacing-default;
-		
-		.row:first-of-type {
-			height: 50px;
-		}
-		
-		.row .large-3 {
-			padding: 0;
-		}
-		
-		h1 {
-			background: none;
-			height: 45px;
-			line-height: 45px;
-			padding: 2px 0 0;
-		}
-		
-		h1,
-		h1 a {
-			display: block;
-			font-size: @extra-large-text;
-			text-align: center;
-		}
-		
-		&.header-open-mobile {
-			height: auto;
-		}
+      height: 50px;
+      margin: 0 0 @spacing-default;
+
+      .row:first-of-type {
+        height: 50px;
+      }
+
+      .row .large-3 {
+        padding: 0;
+      }
+
+      h1 {
+        background: none;
+        height: 45px;
+        line-height: 45px;
+        padding: 2px 0 0;
+      }
+
+      h1,
+      h1 a {
+        display: block;
+        font-size: @extra-large-text;
+        text-align: center;
+      }
+
+      &.header-open-mobile {
+        height: auto;
+      }
 	}
 	
 	section h1 {
-		font-size: @medium-text-mobile;
-		margin-bottom: @spacing-default;
+      font-size: @medium-text-mobile;
+      margin-bottom: @spacing-default;
 	}
 	
   .post-list {
@@ -879,26 +836,26 @@ aside {
 		z-index: 1;
 		
 		a:hover {
-			color: @header-light;
+          color: @header-light;
 		}
 	}
 
 	.dropdown-holder {
     
-		.dropdown {
-			background: @header-dark;
-			position: static;
-			margin: 0;
-			
-			a {
-				font-size: 1em;
-				text-align: center;
-			}
-		}
+      .dropdown {
+        background: @header-dark;
+        position: static;
+        margin: 0;
+
+        a {
+          font-size: 1em;
+          text-align: center;
+        }
+      }
 	}
 }
 
-// smartphone (xxx px)
+// small screens / smartphones (<xxx px)
 @media only screen and (max-width: 40em) {
   
   .post-list {

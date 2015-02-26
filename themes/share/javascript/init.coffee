@@ -3,14 +3,14 @@ $ ->
   jQuery('a.new-window,a[rel=external]').each(->
     $(this).on "click", ->
       window.open($(this).attr('href'))
-      return false
+      defaultPrevented()
   )
 
   # links in post content
   jQuery('.post-content a').each(->
     jQuery(this).on "click", ->
       window.open($(this).attr('href'))
-      return false
+      defaultPrevented()
   )
 
   # user menue

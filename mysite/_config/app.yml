@@ -1,0 +1,3 @@
+Injector:
+  MyConverter:
+    class: MyConverter

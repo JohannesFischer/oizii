@@ -16,38 +16,40 @@ shareApp.controller 'About', ($scope, $http, pageFactory) ->
 shareApp.controller 'Login', ($scope, $http, $cookies, pageFactory) ->
   $scope.error = false
 
-  $http.get('data/isLoggedIn').success (data) ->
-    if data.User isnt undefined
+  $http
+    url: 'data/isLoggedIn'
+  .success (data) ->
+    if data.User?
       window.location.href = '/'
 
-    pageFactory.setTitle('Login')
+  pageFactory.setTitle('Login')
 
-    $scope.login = ->
-      $scope.error = false
+  $scope.login = ->
+    $scope.error = false
 
-      mail = angular.element(document.querySelector('#Email'))
-      pass = angular.element(document.querySelector('#Password'))
+    mail = angular.element(document.querySelector('#Email'))
+    pass = angular.element(document.querySelector('#Password'))
 
-      postData =
-        email: mail.val()
-        password: pass.val()
+    postData =
+      email: mail.val()
+      password: pass.val()
 
-      # validation
-      $http
-        url: '/data/login/'
-        method: "POST"
-        data: postData
-        headers:
-          'Content-Type': 'application/json'
-      .success (data) ->
-        if data.User is undefined
-          $scope.error = true
-        else
-          url = '/'
-          if $cookies.lastVisited
-            url = '#' + $cookies.lastVisited
-          window.location.href = url
-      $route.reload()
+    # validation
+    $http
+      url: '/data/login/'
+      method: "POST"
+      data: postData
+      headers:
+        'Content-Type': 'application/json'
+    .success (data) ->
+      if data.User?
+        url = '/'
+        if $cookies.lastVisited
+          url = '#' + $cookies.lastVisited
+        window.location.href = url
+      else
+        $scope.error = true
+    $route.reload()
 
 # PostList
 shareApp.controller 'PostList', ($scope, postService, pageFactory) ->
@@ -136,7 +138,7 @@ shareApp.controller 'PostEdit', ($scope, $http, $location, $routeParams, postFac
   $scope.master = {}
   $scope.post = {}
 
-  $http.get
+  $http
     url: "data/getPost/#{$routeParams.postId}?edit=1"
   .success (data) ->
     $scope.loading = false
@@ -352,7 +354,7 @@ shareApp.controller 'Search', ($scope, $routeParams, $location, postService, pag
   # todo set title
   pageFactory.resetTitle()
 
-  if $routeParams.searchString isnt undefined
+  if $routeParams.searchString?
     postService.clear()
     $scope.loadMore = ->
       postService.getPosts 'search=' + $routeParams.searchString

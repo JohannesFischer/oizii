@@ -1,4 +1,4 @@
-shareApp = angular.module 'shareApp', [
+window.shareApp = angular.module 'shareApp', [
   'ngAnimate',
   'ngCookies',
   'ngRoute',
@@ -11,43 +11,43 @@ shareApp.value 'soundcloudClientId', 'a12345654321x'
 
 shareApp.config(['$routeProvider', ($routeProvider) ->
   $routeProvider.when('/about',
-    templateUrl: 'share/about/'
+    templateUrl: 'layout/about/'
     controller: 'About'
   ).when('/add',
-    templateUrl: 'share/newPost/'
+    templateUrl: 'layout/newpost/'
     controller: 'NewPost'
   ).when('/edit/:postId',
-    templateUrl: 'share/newpost/'
+    templateUrl: 'layout/newpost/'
     controller: 'PostEdit'
   ).when('/genre/:genreId',
-    templateUrl: 'share/posts/'
+    templateUrl: 'layout/posts/'
     controller: 'PostListGenre'
   ).when('/likes/',
-    templateUrl: 'share/posts/'
+    templateUrl: 'layout/posts/'
     controller: 'PostListLikes'
   ).when('/login',
-    templateUrl: 'share/login/'
+    templateUrl: 'layout/login/'
     controller: 'Login'
   ).when('/playlist/tag/:tag',
-    templateUrl: 'share/playlist/'
+    templateUrl: 'layout/playlist/'
     controller: 'Playlist'
   ).when('/post/:postId',
-    templateUrl: 'share/post/'
+    templateUrl: 'layout/post/'
     controller: 'PostDetails'
   ).when('/posts',
-    templateUrl: 'share/posts/'
+    templateUrl: 'layout/posts/'
     controller: 'PostList'
   ).when('/search/:searchString',
-    templateUrl: 'share/search/'
+    templateUrl: 'layout/search/'
     controller: 'Search'
   ).when('/share',
-    templateUrl: 'share/newpost/'
+    templateUrl: 'layout/newpost/'
     controller: 'NewPost'
   ).when('/tag/:tag',
-    templateUrl: 'share/posts/'
+    templateUrl: 'layout/posts/'
     controller: 'PostListTag'
   ).when('/user/:userId',
-    templateUrl: 'share/posts/'
+    templateUrl: 'layout/posts/'
     controller: 'PostListUser'
   ).otherwise(
     redirectTo: 'posts/'

@@ -5,6 +5,6 @@ class PostAdmin extends ModelAdmin {
     'Post'
   );
 
-  static $url_segment = 'posts';
-  static $menu_title = 'Share';
+  static $url_segment = 'postadmin';
+  static $menu_title = 'Post Admin';
 }

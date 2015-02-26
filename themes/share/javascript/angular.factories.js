@@ -15,7 +15,7 @@ shareApp.factory('pageFactory', function($http, $cookies, $location) {
   };
 });
 
-lilyAdmin.factory('chartFactory', function($http, $location, $q, $log) {
+shareApp.factory('postFactory', function($http, $location, $q, $log) {
   return {
     cleanBCLink: function(link) {
       var bc, et, match, regex;
@@ -30,44 +30,44 @@ lilyAdmin.factory('chartFactory', function($http, $location, $q, $log) {
         return false;
       }
       return false;
-      return {
-        getPost: function(id) {
-          return $http({
-            url: 'data/getPost/' + id
-          }).success(function(data) {
-            return data;
-          });
-        },
-        getPosts: function(parameter) {
-          var deferred;
-          deferred = $q.defer();
-          $http({
-            url: "data/getPosts" + parameter
-          }).success(function(data) {
-            return deferred.resolve(data);
-          }).error(function(msg, code) {
-            deferred.reject(msg);
-            return $log.error(msg, code);
-          });
-          return deferred.promise;
-        },
-        submitPost: function(formData) {
-          return $http({
-            url: '/data/newPost/',
-            method: "POST",
-            data: formData,
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }).success(function(data) {
-            if (data.ID !== void 0) {
-              return $scope.error = true;
-            } else {
-              return $location.path('/post/' + data.ID);
-            }
-          });
+    },
+    getPost: function(id) {
+      return $http({
+        url: 'data/getPost/' + id
+      }).success(function(data) {
+        return data;
+      });
+    },
+    getPosts: function(parameter) {
+      var deferred;
+      deferred = $q.defer();
+      $http({
+        url: "data/getPosts" + parameter
+      }).success(function(data) {
+        return deferred.resolve(data);
+      }).error(function(msg, code) {
+        deferred.reject(msg);
+        return $log.error(msg, code);
+      });
+      return deferred.promise;
+    },
+    submitPost: function(formData) {
+      return $http({
+        url: '/data/newPost/',
+        method: "POST",
+        data: formData,
+        headers: {
+          'Content-Type': 'application/json'
         }
-      };
+      }).success(function(data) {
+        if (data.ID != null) {
+          return $location.path('/post/' + data.ID);
+        } else {
+          return $log.error(data);
+        }
+      }).error(function(msg, code) {
+        return $log.error(msg, code);
+      });
     }
   };
 });

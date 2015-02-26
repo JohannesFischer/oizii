@@ -3,16 +3,14 @@
 # Factories
 shareApp.factory 'pageFactory', ($http, $cookies, $location) ->
   defaultTitle = 'oizii :: share delicous music'
-  {
-    resetTitle: ->
-      document.title = defaultTitle
-    setLastVisited: (postId) ->
-      $cookies.lastVisited = $location.url()
-    setTitle: (newTitle) ->
-      document.title = "#{newTitle} :: #{defaultTitle}"
-  }
+  resetTitle: ->
+    document.title = defaultTitle
+  setLastVisited: (postId) ->
+    $cookies.lastVisited = $location.url()
+  setTitle: (newTitle) ->
+    document.title = "#{newTitle} :: #{defaultTitle}"
 
-lilyAdmin.factory 'chartFactory', ($http, $location, $q, $log) ->
+shareApp.factory 'postFactory', ($http, $location, $q, $log) ->
   cleanBCLink: (link) ->
     bc = (link).indexOf('bandcamp.com/EmbeddedPlayer/') > -1
     et = (link).indexOf('8tracks.com/') > -1
@@ -23,33 +21,35 @@ lilyAdmin.factory 'chartFactory', ($http, $location, $q, $log) ->
         return match[1]
       return false
     return false
-    getPost: (id) ->
-      $http
-        url: 'data/getPost/' + id
-      .success (data) ->
-        return data
-    getPosts: (parameter) ->
-      deferred = $q.defer()
-      $http
-        url: "data/getPosts#{parameter}"
-      .success (data) ->
-        deferred.resolve(data)
-      .error (msg, code) ->
-        deferred.reject(msg)
-        $log.error msg, code
-      deferred.promise
-    submitPost: (formData) ->
-      $http
-        url: '/data/newPost/'
-        method: "POST"
-        data: formData
-        headers:
-          'Content-Type': 'application/json'
-      .success (data) ->
-        if data.ID isnt undefined
-          $scope.error = true
-        else
-          $location.path('/post/' + data.ID)
+  getPost: (id) ->
+    $http
+      url: 'data/getPost/' + id
+    .success (data) ->
+      return data
+  getPosts: (parameter) ->
+    deferred = $q.defer()
+    $http
+      url: "data/getPosts#{parameter}"
+    .success (data) ->
+      deferred.resolve(data)
+    .error (msg, code) ->
+      deferred.reject(msg)
+      $log.error msg, code
+    deferred.promise
+  submitPost: (formData) ->
+    $http
+      url: '/data/newPost/'
+      method: "POST"
+      data: formData
+      headers:
+        'Content-Type': 'application/json'
+    .success (data) ->
+      if data.ID?
+        $location.path('/post/' + data.ID)
+      else
+        $log.error data
+    .error (msg, code) ->
+      $log.error msg, code
 
 # Provider
 
