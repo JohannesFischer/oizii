@@ -1665,19 +1665,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array The database fields
 	 */
 	public function db($fieldName = null) {
-		$classes = ClassInfo::ancestry($this);
-		$good = false;
+		$classes = ClassInfo::ancestry($this, true);
+
+		// If we're looking for a specific field, we want to hit subclasses first as they may override field types
+		if($fieldName) {
+			$classes = array_reverse($classes);
+		}
+
 		$items = array();
-
 		foreach($classes as $class) {
-			// Wait until after we reach DataObject
-			if(!$good) {
-				if($class == 'DataObject') {
-					$good = true;
-				}
-				continue;
-			}
-
 			if(isset(self::$_cache_db[$class])) {
 				$dbItems = self::$_cache_db[$class];
 			} else {
@@ -3439,6 +3435,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @var array
 	 */
 	private static $casting = array(
+		"ID" => 'Int',
+		"ClassName" => 'Varchar',
 		"LastEdited" => "SS_Datetime",
 		"Created" => "SS_Datetime",
 		"Title" => 'Text',

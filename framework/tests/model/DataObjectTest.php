@@ -16,18 +16,41 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_FieldlessSubTable',
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
-		'DataObjectTest_TeamComment'
+		'DataObjectTest_TeamComment',
+		'DataObjectTest_ExtendedTeamComment'
 	);
 
-	public function testBaseFieldsExcludedFromDb() {
-		$obj = new DataObjectTest_ValidatedObject();
-
+	public function testDb() {
+		$obj = new DataObjectTest_TeamComment();
 		$dbFields = $obj->db();
+
+		// Assert fields are included
 		$this->assertArrayHasKey('Name', $dbFields);
+
+		// Assert the base fields are excluded
 		$this->assertArrayNotHasKey('Created', $dbFields);
 		$this->assertArrayNotHasKey('LastEdited', $dbFields);
 		$this->assertArrayNotHasKey('ClassName', $dbFields);
 		$this->assertArrayNotHasKey('ID', $dbFields);
+
+		// Assert that the correct field type is returned when passing a field
+		$this->assertEquals('Varchar', $obj->db('Name'));
+		$this->assertEquals('Text', $obj->db('Comment'));
+
+		$obj = new DataObjectTest_ExtendedTeamComment();
+		$dbFields = $obj->db();
+
+		// Assert overloaded fields have correct data type
+		$this->assertEquals('HTMLText', $obj->db('Comment'));
+		$this->assertEquals('HTMLText', $dbFields['Comment'],
+			'Calls to DataObject::db without a field specified return correct data types');
+
+		// assertEquals doesn't verify the order of array elements, so access keys manually to check order:
+		// expected: array('Name' => 'Varchar', 'Comment' => 'HTMLText')
+		reset($dbFields);
+		$this->assertEquals('Name', key($dbFields), 'DataObject::db returns fields in correct order');
+		next($dbFields);
+		$this->assertEquals('Comment', key($dbFields), 'DataObject::db returns fields in correct order');
 	}
 
 	public function testValidObjectsForBaseFields() {
@@ -1441,6 +1464,12 @@ class DataObjectTest_TeamComment extends DataObject {
 		'Team' => 'DataObjectTest_Team'
 	);
 
+}
+
+class DataObjectTest_ExtendedTeamComment extends DataObjectTest_TeamComment {
+	private static $db = array(
+		'Comment' => 'HTMLText'
+	);
 }
 
 DataObjectTest_Team::add_extension('DataObjectTest_Team_Extension');

@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "91e7724e6e75291d6f5512415fbdcec525ad4d7e"
+            "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/91e7724e6e75291d6f5512415fbdcec525ad4d7e",
-            "reference": "91e7724e6e75291d6f5512415fbdcec525ad4d7e",
+            "url": "https://api.github.com/repos/composer/installers/zipball/d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
+            "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
             "shasum": ""
         },
         "replace": {
@@ -22,7 +22,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "4.1.*"
         },
-        "time": "2014-11-23 19:34:57",
+        "time": "2015-02-18 17:17:01",
         "type": "composer-installer",
         "extra": {
             "class": "Composer\\Installers\\Installer",
@@ -55,9 +55,11 @@
             "Hurad",
             "MODX Evo",
             "OXID",
+            "SMF",
             "Thelia",
             "WolfCMS",
             "agl",
+            "aimeos",
             "annotatecms",
             "bitrix",
             "cakephp",
@@ -96,17 +98,17 @@
     },
     {
         "name": "silverstripe/framework",
-        "version": "3.1.8",
-        "version_normalized": "3.1.8.0",
+        "version": "3.1.10",
+        "version_normalized": "3.1.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/silverstripe/silverstripe-framework.git",
-            "reference": "8b3695bd41e5fcd0fb2fe97811fcba4ed03ce214"
+            "reference": "c302edc4e72dd93ac2c7d9bbf0ee42d2d74cd48b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/silverstripe/silverstripe-framework/zipball/8b3695bd41e5fcd0fb2fe97811fcba4ed03ce214",
-            "reference": "8b3695bd41e5fcd0fb2fe97811fcba4ed03ce214",
+            "url": "https://api.github.com/repos/silverstripe/silverstripe-framework/zipball/c302edc4e72dd93ac2c7d9bbf0ee42d2d74cd48b",
+            "reference": "c302edc4e72dd93ac2c7d9bbf0ee42d2d74cd48b",
             "shasum": ""
         },
         "require": {
@@ -116,7 +118,7 @@
         "require-dev": {
             "phpunit/phpunit": "~3.7@stable"
         },
-        "time": "2014-11-18 05:30:19",
+        "time": "2015-02-18 23:37:16",
         "type": "silverstripe-module",
         "installation-source": "dist",
         "autoload": {

@@ -1,2 +1,5 @@
 # ignore all bower components
 themes/share/bower/*
+.DS_STORE
+vendor/*
+composer.lock

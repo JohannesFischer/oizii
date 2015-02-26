@@ -16,7 +16,6 @@ class SS_TemplateManifest {
 	protected $cacheKey;
 	protected $project;
 	protected $inited;
-	protected $forceRegen;
 	protected $templates = array();
 
 	/**
@@ -40,7 +39,9 @@ class SS_TemplateManifest {
 		$this->cache = new $cacheClass('templatemanifest'.($includeTests ? '_tests' : ''));
 		$this->cacheKey = $this->getCacheKey($includeTests);
 
-		$this->forceRegen = $forceRegen;
+		if ($forceRegen) {
+			$this->regenerate();
+		}
 	}
 
 	/**
@@ -208,7 +209,7 @@ class SS_TemplateManifest {
 	}
 
 	protected function init() {
-		if (!$this->forceRegen && $data = $this->cache->load($this->cacheKey)) {
+		if ($data = $this->cache->load($this->cacheKey)) {
 			$this->templates = $data;
 			$this->inited    = true;
 		} else {
