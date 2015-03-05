@@ -13,8 +13,9 @@ shareApp.controller 'About', ($scope, $http, pageFactory) ->
     $scope.genres = data[0].Genres
 
 # Login
-shareApp.controller 'Login', ($scope, $http, $cookies, pageFactory) ->
+shareApp.controller 'Login', ($scope, $http, $cookies, $route, pageFactory) ->
   $scope.error = false
+  $scope.logindata = {}
 
   $http
     url: 'data/isLoggedIn'
@@ -27,18 +28,11 @@ shareApp.controller 'Login', ($scope, $http, $cookies, pageFactory) ->
   $scope.login = ->
     $scope.error = false
 
-    mail = angular.element(document.querySelector('#Email'))
-    pass = angular.element(document.querySelector('#Password'))
-
-    postData =
-      email: mail.val()
-      password: pass.val()
-
-    # validation
+    # TODO validation
     $http
       url: '/data/login/'
       method: "POST"
-      data: postData
+      data: $scope.logindata
       headers:
         'Content-Type': 'application/json'
     .success (data) ->
@@ -46,10 +40,10 @@ shareApp.controller 'Login', ($scope, $http, $cookies, pageFactory) ->
         url = '/'
         if $cookies.lastVisited
           url = '#' + $cookies.lastVisited
-        window.location.href = url
+        #window.location.href = url
+        $route.reload()
       else
         $scope.error = true
-    $route.reload()
 
 # PostList
 shareApp.controller 'PostList', ($scope, postService, pageFactory) ->
@@ -124,9 +118,8 @@ shareApp.controller 'NewPost', ($scope, postFactory) ->
   # checking for pasted Bandcamp iframe source end extracts src
   $scope.cleanBCLink = ->
     bcLink = postFactory.cleanBCLink($scope.post.Link)
-
     if bcLink isnt false
-        $scope.post.Link = bcLink
+      $scope.post.Link = bcLink
 
   $scope.isUnchanged = (post) ->
     false
@@ -218,17 +211,17 @@ shareApp.controller 'PostDetails', (soundcloudClientId, $scope, $routeParams, $h
     # Posts by GenreID
     genreUrl = "?limit=5&random=1&genreId=#{$scope.post.Genre.ID}&exclude=#{$scope.post.ID}"
     postFactory.getPosts(genreUrl).then((response) ->
-        $scope.postsGenre = response
-      , (errorPayload) ->
-        $log.error 'failed loading posts', errorPayload
+      $scope.postsGenre = response
+    , (errorPayload) ->
+      $log.error 'failed loading posts', errorPayload
     )
 
     # Posts by UserID
     userUrl = "?limit=5&random=1&userId=#{$scope.post.User.ID}&exclude=#{$scope.post.ID}"
     postFactory.getPosts(userUrl).then((response) ->
-        $scope.postsUser = response
-      , (errorPayload) ->
-        $log.error 'failure loading movie', errorPayload
+      $scope.postsUser = response
+    , (errorPayload) ->
+      $log.error 'failure loading movie', errorPayload
     )
 
     # set last visited page
@@ -246,7 +239,7 @@ shareApp.controller 'PostDetails', (soundcloudClientId, $scope, $routeParams, $h
           $scope.likeUsers = usr.join(', ')
 
     $scope.sendComment = ->
-      $scope.commentFrombusy = true;
+      $scope.commentFrombusy = true
       commentField = angular.element(document.querySelector('input[name=CommentText]'))
 
       data =
@@ -257,13 +250,13 @@ shareApp.controller 'PostDetails', (soundcloudClientId, $scope, $routeParams, $h
         return
 
       $http
-          url: '/data/comment/'
-          method: "POST"
-          data: data
-          headers:
-            'Content-Type': 'application/json'
+        url: '/data/comment/'
+        method: "POST"
+        data: data
+        headers:
+          'Content-Type': 'application/json'
       .success (data) ->
-        $scope.post.Comments = data;
+        $scope.post.Comments = data
 
         for i in [0...data.length] by 1
           $scope.post.Comments[i].Content = $sce.trustAsHtml(data[i].Content)
@@ -302,7 +295,7 @@ shareApp.controller 'Playlist', ($scope, $http, $routeParams, $document, $window
   # play
   $scope.play = (index) ->
     $scope.post = $scope.posts[index]
-    $scope.currentIndex = index;
+    $scope.currentIndex = index
     $window.player.loadVideoById($scope.posts[index].YouTubeID)
 
   # play call from Player
@@ -336,7 +329,7 @@ shareApp.controller 'Playlist', ($scope, $http, $routeParams, $document, $window
       #videoId: $scope.posts[$scope.currentIndex].YouTubeID,
       events: {
         'onReady': (event) ->
-            $scope.getPosts()
+          $scope.getPosts()
         'onError': (event) ->
           $scope.playNext()
         'onStateChange': (event) ->

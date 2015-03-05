@@ -93,11 +93,11 @@ body {
 //   Typography
 // -----------------------------------------
 
-@font-face { 
+@font-face {
   font-family: "Ubuntu Light";
   src: url('../webfonts/Ubuntu-L.woff');
 }
-@font-face { 
+@font-face {
   font-family: "Ubuntu Light Italic";
   src: url('../webfonts/Ubuntu-LI.woff');
 }
@@ -295,7 +295,7 @@ header {
 
 .dropdown-holder {
 	height: 0;
-	
+
 	.dropdown {
 		background-color: @header-color;
 		left: 0;
@@ -305,19 +305,19 @@ header {
 		top: 0;
 		width: 100%;
 		z-index: 1;
-		
+
 		li {
 			border-bottom: 1px solid @header-light;
 			.transition;
-			
+
 			&:hover {
 				background: @header-light;
 			}
-			
+
 			&:last-of-type {
 				border: 0;
 			}
-			
+
 			a {
 				display: block;
 				padding: 2px 10px;
@@ -354,14 +354,14 @@ header {
 
 .page-title {
 	margin: 1rem 0 2rem -10px;
-	
+
 	h3 {
 		background: @header-color;
 		display: inline;
 		margin-bottom: 0.5rem;
 		padding: 0.25rem 1rem;
 		position: relative;
-		
+
 		&:after {
 			border-color: @header-color transparent;
 			border-style: solid;
@@ -375,7 +375,7 @@ header {
 			width: 0;
 		}
 	}
-	
+
 }
 
 // -----------------------------------------
@@ -399,7 +399,7 @@ header {
 }
 
 .playlist-link {
-  
+
   a {
     color: #fff;
   }
@@ -417,11 +417,11 @@ section h1 {
 	overflow: hidden;
 
 	article  {
-      background-color: #777; // default-color
       margin: 0 0 @spacing-larger;
       opacity: 1;
 
       div.content {
+        background-color: #777; // default-color
         height: 120px;
         overflow: hidden;
         .transition;
@@ -490,38 +490,38 @@ section h1 {
 
 .post {
 	margin-bottom: @spacing-default;
-	
+
 	h1,
 	p,
 	em {
 		color: @font-color;
 	}
-	
+
 	.post-content {
 		margin-bottom: @spacing-larger;
-		
+
 		p:last-of-type {
 			margin-bottom: 0;
 		}
 	}
-	
+
 	// hash tags
 	.hash-tags {
 		margin-bottom: @spacing-larger;
 		overflow: hidden;
-		
+
 		ul {
 			list-style:none;
 			margin: 0;
 			padding: 0;
-			
+
 			li {
 				float: left;
 				height: 24px;
 				line-height: 24px;
 				margin-bottom: 0.4rem;
 				position: relative;
-				
+
 				a {
 					background: @tag-color;
 					border-bottom-right-radius: 4px;
@@ -531,19 +531,19 @@ section h1 {
 					margin-right: 0.7rem;
 					padding: 0px 10px 0px 12px;
 					position: relative;
-					
+
 					&:first-of-type {
 						margin-left: 12px;
 					}
-					
+
 					&:hover {
 						background: @tag-color-hover;
-						
+
 						&:before {
 							border-color: transparent @tag-color-hover transparent transparent;
 						}
 					}
-					
+
 					&:before {
 						border-color: transparent @tag-color transparent transparent;
 						border-style: solid;
@@ -556,7 +556,7 @@ section h1 {
 						top: 0px;
 						width: 0;
 					}
-					
+
 					&:after {
 						background: @font-color;
 						border-radius: 50%;
@@ -566,21 +566,21 @@ section h1 {
 						left: 0;
 						position: absolute;
 						top: 10px;
-						width: 4px;						
+						width: 4px;
 					}
 				}
 			}
 		}
 	}
-	
+
   .player {
     background: @header-light url(../images/loader.gif) no-repeat 50% 50%;
   }
-  
+
   .bandcamp {
     background: transparent;
   }
-	
+
   iframe {
     display: block;
     margin: 0 0 @spacing-default;
@@ -621,22 +621,22 @@ section h1 {
 // -----------------------------------------
 
 .chart {
-	
+
 	.chart-holder {
-		
+
 		.slice {
 			border-radius: 50%;
 			clip: rect(0px, 300px, 300px, 150px);
 			height: 50px;
 			width: 50px;
 		}
-		
+
 	}
-	
+
 	// legend
 	li {
 		list-style: none;
-	
+
 		.legend {
 			display: block;
 			float: left;
@@ -645,7 +645,7 @@ section h1 {
 			width: 20px;
 		}
 	}
-	
+
 	// colors
     .generate-colors(@n, @i: 1) when (@i =< @n) {
       .color@{i} {
@@ -655,7 +655,7 @@ section h1 {
     }
 
     .generate-colors(15);
-	
+
 }
 
 /* -----------------------------------------
@@ -678,7 +678,7 @@ section h1 {
 	.user-color {
       height: 70px;
       width: 100%;
-	}	
+	}
 }
 
 /* -----------------------------------------
@@ -687,7 +687,7 @@ section h1 {
 
 .Playlist {
   margin-bottom: 1em;
-	
+
 	.video-list {
 
       li {
@@ -741,19 +741,19 @@ aside {
 
 // Styles for screens that are smaller than 768px;
 @media only screen and (max-width: 48em) {
-	
+
 	.hide-on-mobile {
       display: none;
-	}	
+	}
 	.mobile-only {
       display: block;
 	}
-	
+
 	p,
 	a {
       font-size: @regular-text-mobile;
 	}
-	
+
 	header {
       height: 50px;
       margin: 0 0 @spacing-default;
@@ -784,44 +784,44 @@ aside {
         height: auto;
       }
 	}
-	
+
 	section h1 {
       font-size: @medium-text-mobile;
       margin-bottom: @spacing-default;
 	}
-	
+
   .post-list {
-  
+
     article {
       height: 120px;
       margin-bottom: @spacing-default;
-      
+
       div.content {
-        
+
         h2 {
           margin: 0 0 10px;
-          
+
           a {
             font-size: @medium-text-mobile;
             height: auto;
           }
         }
-        
+
         p {
           margin: 0 0 5px;
         }
       }
     }
   }
-	
+
   .button {
     width: 100%;
-    
+
     &.right {
       float: none;
-    } 
+    }
   }
-	
+
 	.mobile-menue,
 	.sign-in {
 		background: @header-dark;
@@ -834,14 +834,14 @@ aside {
 		top: 0;
 		width: 65px;
 		z-index: 1;
-		
+
 		a:hover {
           color: @header-light;
 		}
 	}
 
 	.dropdown-holder {
-    
+
       .dropdown {
         background: @header-dark;
         position: static;
@@ -857,17 +857,17 @@ aside {
 
 // small screens / smartphones (<xxx px)
 @media only screen and (max-width: 40em) {
-  
+
   .post-list {
-    
+
     article {
       margin-bottom: @spacing-close;
-    
+
       &,
       & div.content {
         height: auto;
       }
     }
   }
-  
+
 }

@@ -318,7 +318,7 @@ class Data_Controller extends Controller {
 
     // search post title
       if ($search) {
-          $sqlQuery->addWhere("Post.Title LIKE '%{$search}%'");
+        $sqlQuery->addWhere("Post.Title LIKE '%{$search}%'");
       }
 
       // filter | Tag
@@ -406,29 +406,26 @@ class Data_Controller extends Controller {
     $data = json_decode(file_get_contents('php://input'), true);
 
     if ( ! $member = Member::CurrentUser()) {
-        if (is_array($data) && isset($data['email']) && isset($data['password'])
-            && filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+      if ( ! is_array($data) || ! isset($data['email']) || ! isset($data['password']) || ! filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+        return $this->_error(400, 'Invalid input');
+      }
 
-        } else {
-            return $this->_error(400, 'Invalid input');
-        }
+      $member = MemberAuthenticator::authenticate(array(
+        'Email' => $data['email'],
+        'Password' => filter_var($data['password'], FILTER_SANITIZE_STRING)
+      ));
 
-        $member = MemberAuthenticator::authenticate(array(
-            'Email' => $data['email'],
-            'Password' => filter_var($data['password'], FILTER_SANITIZE_STRING)
-        ));
-
-        if ($member) {
-            $member->logIn();
-        } else {
-            return $this->_error(400, 'Invalid login data');
-        }
+      if ($member) {
+        $member->logIn();
+      } else {
+        return $this->_error(400, 'Invalid login data');
+      }
     }
 
     return $this->_jsonOut(array(
-        'User' => array(
-            'Name' => $member->FirstName
-        )
+      'User' => array(
+        'Name' => $member->FirstName
+      )
     ));
   }
 

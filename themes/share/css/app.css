@@ -284,11 +284,11 @@ section h1 {
   overflow: hidden;
 }
 .post-list article {
-  background-color: #777;
   margin: 0 0 20px;
   opacity: 1;
 }
 .post-list article div.content {
+  background-color: #777;
   height: 120px;
   overflow: hidden;
   -webkit-transition: all 0.5s ease;

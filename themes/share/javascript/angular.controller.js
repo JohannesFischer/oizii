@@ -9,8 +9,9 @@ shareApp.controller('About', function($scope, $http, pageFactory) {
   });
 });
 
-shareApp.controller('Login', function($scope, $http, $cookies, pageFactory) {
+shareApp.controller('Login', function($scope, $http, $cookies, $route, pageFactory) {
   $scope.error = false;
+  $scope.logindata = {};
   $http({
     url: 'data/isLoggedIn'
   }).success(function(data) {
@@ -20,18 +21,11 @@ shareApp.controller('Login', function($scope, $http, $cookies, pageFactory) {
   });
   pageFactory.setTitle('Login');
   return $scope.login = function() {
-    var mail, pass, postData;
     $scope.error = false;
-    mail = angular.element(document.querySelector('#Email'));
-    pass = angular.element(document.querySelector('#Password'));
-    postData = {
-      email: mail.val(),
-      password: pass.val()
-    };
-    $http({
+    return $http({
       url: '/data/login/',
       method: "POST",
-      data: postData,
+      data: $scope.logindata,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -42,12 +36,11 @@ shareApp.controller('Login', function($scope, $http, $cookies, pageFactory) {
         if ($cookies.lastVisited) {
           url = '#' + $cookies.lastVisited;
         }
-        return window.location.href = url;
+        return $route.reload();
       } else {
         return $scope.error = true;
       }
     });
-    return $route.reload();
   };
 });
 
