@@ -23,19 +23,12 @@ class Share_Controller extends Controller {
 
     $css_array = array(
       $this->theme_folder . 'bower/foundation/css/normalize.css',
-      $this->theme_folder . 'bower/foundation/css/foundation.css'
+      $this->theme_folder . 'bower/foundation/css/foundation.css',
+      $css_folder . 'app.css'
     );
 
-    if (Director::isLive()) {
-      array_push($css_array, $css_folder . 'app.css');
-    }
     // combine CSS
     Requirements::combine_files('css_min.css', $css_array);
-
-    // inlcude LESS file in DEV environments
-    if (Director::isDev()) {
-      Requirements::css($css_folder . 'app.less');
-    }
 
     // include JS
     $js_folder = $this->theme_folder . 'javascript/';

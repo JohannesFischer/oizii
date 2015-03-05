@@ -100,7 +100,7 @@ shareApp.provider('postService', function() {
             for (i = _i = 0, _ref = response.length; _i < _ref; i = _i += 1) {
               data.posts.push(response[i]);
             }
-            if (response.length !== postsPerPage) {
+            if (response.length < postsPerPage) {
               return data.loading = false;
             } else {
               data.start += response.length;

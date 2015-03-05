@@ -80,7 +80,7 @@ shareApp.provider 'postService', ->
           for i in [0...response.length] by 1
             data.posts.push(response[i])
           # if less posts returned than perPage
-          if response.length != postsPerPage
+          if response.length < postsPerPage
             data.loading = false
           else
             data.start += response.length
