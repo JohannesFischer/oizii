@@ -25,6 +25,20 @@ On "live" environments, the `?isDev=1` solution is preferred, as it means that y
 (and potentially security sensitive) PHP errors as well.
 </div>
 
+## mod_rewrite isn't working but it's installed (prior to SilverStripe 3.1.11)
+
+Due to some changes to `mod_dir` in [Apache 2.4](http://httpd.apache.org/docs/current/mod/mod_dir.html#DirectoryCheckHandler) (precedence of handlers), index.php gets added to the URLs as soon as you navigate to the homepage of your site. Further requests are then handled by index.php rather than `mod_rewrite` (framework/main.php). To fix this place the following within the `mod_rewrite` section of your .htaccess file:
+
+```
+<IfModule mod_rewrite.c>
+	# Turn off index.php handling requests to the homepage fixes issue in apache >=2.4
+	<IfModule mod_dir.c>
+    	DirectoryIndex disabled
+	</IfModule>
+# ------ #
+</IfModule>
+```
+
 ## My templates don't update on page refresh
 
 Putting ?flush=1 on the end of any SilverStripe URL will clear out all cached content; this is a pretty common solution
@@ -59,11 +73,11 @@ every page on the site, if that's easier.
 
 Please make sure all code inside `*.php` files is wrapped in classes. Due to the way `[api:ManifestBuilder]`
 includes all files with this extension, any **procedural code will be executed on every call**. The most common error here
-is putting a test.php/phpinfo.php file in the document root. See [datamodel](/topics/datamodel) and [controllers](/topics/controller)
+is putting a test.php/phpinfo.php file in the document root. See [datamodel](/developer_guides/data_model_and_orm) and [controllers](/developer_guides/controllers)
 for ways how to structure your code.
 
 Also, please check that you have PHP enabled on the webserver, and you're running PHP 5.1 or later.
-The web-based [SilverStripe installer](/installation) can help you with this.
+The web-based [SilverStripe installer](/getting_started/installation) can help you with this.
 
 ## I've got file permission problems during installation
 

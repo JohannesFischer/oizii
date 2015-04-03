@@ -1,6 +1,10 @@
 title: Extending a basic site
 summary: Building on tutorial 1, a look at storing data in SilverStripe and creating a latest news feed.
 
+<div class="alert" markdown="1">
+This tutorial is deprecated, and has been replaced by Lessons 4, 5, and 6 in the [Lessons section](http://www.silverstripe.org/learn/lessons)
+</div>
+
 # Tutorial 2 - Extending a basic site
 
 ## Overview
@@ -174,7 +178,7 @@ would create a new tab called "New Tab", and a single "Author" textfield inside.
 </div>
 
 We have added two fields: A simple `[api:TextField]` and a `[api:DateField]`.   
-There are many more fields available in the default installation, listed in ["form field types"](/developer_guides/forms/fields/common_subclasses).
+There are many more fields available in the default installation, listed in ["form field types"](/developer_guides/forms/field_types/common_subclasses).
 
 	:::php
 	return $fields;

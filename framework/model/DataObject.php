@@ -1797,9 +1797,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 				
 			} else {
-				
 				// Find all the extra fields for all components
-				$newItems = eval("return (array){$class}::\$many_many_extraFields;");
+				$newItems = (array)Config::inst()->get($class, 'many_many_extraFields', Config::UNINHERITED);
 				
 				foreach($newItems as $k => $v) {
 					if(!is_array($v)) {
@@ -1812,9 +1811,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					}
 				}
 					
-				return isset($items) ? array_merge($newItems, $items) : $newItems;
+				$items = isset($items) ? array_merge($newItems, $items) : $newItems;
 			}
 		}
+
+		return isset($items) ? $items : null;
 	}
 	
 	/**
@@ -2319,8 +2320,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(is_object($val) && $this->db($fieldName)) {
 				user_error('DataObject::setField: passed an object that is not a DBField', E_USER_WARNING);
 			}
-		
-			$defaults = $this->stat('defaults');
+
 			// if a field is not existing or has strictly changed
 			if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
 				// TODO Add check for php-level defaults which are not set in the db

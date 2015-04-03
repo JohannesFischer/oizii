@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45"
+            "reference": "f8c20b427de1cfe7a28a015c1640ce4e4eef1e33"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
-            "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
+            "url": "https://api.github.com/repos/composer/installers/zipball/f8c20b427de1cfe7a28a015c1640ce4e4eef1e33",
+            "reference": "f8c20b427de1cfe7a28a015c1640ce4e4eef1e33",
             "shasum": ""
         },
         "replace": {
@@ -22,7 +22,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "4.1.*"
         },
-        "time": "2015-02-18 17:17:01",
+        "time": "2015-03-26 16:11:30",
         "type": "composer-installer",
         "extra": {
             "class": "Composer\\Installers\\Installer",
@@ -98,17 +98,17 @@
     },
     {
         "name": "silverstripe/framework",
-        "version": "3.1.10",
-        "version_normalized": "3.1.10.0",
+        "version": "3.1.12",
+        "version_normalized": "3.1.12.0",
         "source": {
             "type": "git",
             "url": "https://github.com/silverstripe/silverstripe-framework.git",
-            "reference": "c302edc4e72dd93ac2c7d9bbf0ee42d2d74cd48b"
+            "reference": "ffcbeb581258764a01f498e3fb8fa6d9dccbc501"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/silverstripe/silverstripe-framework/zipball/c302edc4e72dd93ac2c7d9bbf0ee42d2d74cd48b",
-            "reference": "c302edc4e72dd93ac2c7d9bbf0ee42d2d74cd48b",
+            "url": "https://api.github.com/repos/silverstripe/silverstripe-framework/zipball/ffcbeb581258764a01f498e3fb8fa6d9dccbc501",
+            "reference": "ffcbeb581258764a01f498e3fb8fa6d9dccbc501",
             "shasum": ""
         },
         "require": {
@@ -118,7 +118,7 @@
         "require-dev": {
             "phpunit/phpunit": "~3.7@stable"
         },
-        "time": "2015-02-18 23:37:16",
+        "time": "2015-03-20 06:29:20",
         "type": "silverstripe-module",
         "installation-source": "dist",
         "autoload": {
